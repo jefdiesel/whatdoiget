@@ -76,7 +76,8 @@ figcaption { opacity: .55; align-self: flex-start; }
 #overlay.on { display: block; }
 #overlay .inner {
   min-height: 100%; box-sizing: border-box;
-  display: flex; align-items: center; justify-content: center;
+  /* the panel shares a top edge with the art rather than floating centred */
+  display: flex; align-items: flex-start; justify-content: center;
   gap: clamp(20px, 3vw, 44px); padding: clamp(18px, 3vw, 40px); flex-wrap: wrap;
 }
 /* Constrain the art by viewport WIDTH as well as height, or it shoves the
@@ -96,7 +97,7 @@ figcaption { opacity: .55; align-self: flex-start; }
 #meta { color: var(--ink); flex: 0 1 300px; min-width: 240px; }
 #meta h2 {
   font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-  font-size: 30px; margin: 0 0 12px; transform: skewX(-9deg);
+  font-size: 30px; margin: -.16em 0 12px; transform: skewX(-9deg);
 }
 #meta dl { margin: 0; border-top: 2px solid var(--ink); }
 #meta .row {
