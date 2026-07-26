@@ -6,30 +6,29 @@ body {
   letter-spacing: .06em; text-transform: uppercase;
 }
 
-/* The banner across the bottom of the 1978 poster: a heavy rule, then a single
-   line of condensed oblique caps spread edge to edge, words divided by middots.
-   Everything on the line is the same size and weight - that is the whole look. */
+/* The banner across the bottom of the 1978 poster: a heavy rule, then one DENSE
+   line of condensed oblique caps - single middots, tight word spacing - running
+   edge to edge. The type is sized so the line exactly fills the measure. */
 footer {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
   background: var(--paper); border-top: 3px solid var(--ink);
-  display: flex; align-items: center; justify-content: space-between;
-  gap: .32em; padding: 8px 16px;
+  display: flex; align-items: center; gap: .26em; padding: 5px 14px 7px;
   font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-  font-size: 34px;   /* replaced at runtime by src/fitbar.js */
+  font-size: 30px;   /* replaced at runtime by src/fitbar.js */
   line-height: 1; text-transform: uppercase; letter-spacing: .01em;
 }
 footer > * { white-space: nowrap; }
-/* skew the letterforms, never the red block itself */
+/* skew the letterforms, never the red box - a skewed block reads as a mistake */
 footer .mark, footer a, footer .dot, #redistribute span { display: inline-block; transform: skewX(-9deg); }
 footer a { color: var(--ink); text-decoration: none; }
-footer a:hover, footer a[aria-current] { color: var(--spot); }
+footer a:hover { color: var(--spot); }
 footer .dot { opacity: .5; }
 
-/* Redistribute sits on the same line at the same size, in red */
+/* Redistribute rides in the line at the same size, knocked out of red */
 #redistribute {
   font: inherit; text-transform: inherit; letter-spacing: inherit;
   background: var(--spot); color: #fff; border: 0; cursor: pointer;
-  padding: .1em .34em .14em;
+  padding: .02em .24em .06em; line-height: 1;
 }
 #redistribute:hover { background: var(--ink); }
 
@@ -61,7 +60,7 @@ button:hover, a.btn:hover { background: var(--ink); border-color: var(--ink); co
 button.ghost, a.btn.ghost { background: none; color: var(--ink); border-color: var(--ink); }
 button.ghost:hover, a.btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
-main { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 22px 22px clamp(70px, 7vw, 110px); }
+main { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 22px 22px clamp(64px, 6vw, 96px); }
 
 /* the grid, butted edge to edge */
 #poster { display: grid; gap: 0; background: var(--ink); }
