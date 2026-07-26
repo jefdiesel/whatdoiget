@@ -98,10 +98,17 @@ function baseline(plane, word, whitePoly, rot, mirror, inverted) {
     angle = 270;
   }
 
-  // On a horizontal edge with the region below it, the glyphs would grow out of
-  // the tile, so drop the baseline a further EM inward instead of flipping.
+  // Inset the baseline by the type's REAL ink extent, not by one cap height.
+  // The wordmark's Z rises 1.17 cap heights above the baseline, so assuming the
+  // cap line clips it straight off the edge of the tile.
+  // Scale by the word's OWN render size. The wordmark is set to a fixed width,
+  // so its effective cap height is larger than CAP_H and using CAP_H here
+  // under-measures its ink and runs it off the tile.
+  const g = GLYPHS[word];
+  const sc = w / g.w;
   const up = { x: dir.y, y: -dir.x };
-  const drop = up.x * N.x + up.y * N.y > 0 ? PAD : PAD + CAP_H;
+  const growsInward = up.x * N.x + up.y * N.y > 0;
+  const drop = PAD + (growsInward ? g.bottom : g.top) * sc;
   const p = { x: mid.x + N.x * drop, y: mid.y + N.y * drop };
 
   const span = spanInPolygon(whitePoly, p, dir);
