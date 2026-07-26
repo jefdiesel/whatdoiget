@@ -1,0 +1,12 @@
+{
+  "name": "what-do-i-get-1978",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "What Do I Get, 1978 - 180 single items measured from the Buzzcocks promo poster (UP 36348, 1978)",
+  "scripts": {
+    "dev": "node server.mjs",
+    "mint": "node scripts/provenance.mjs && node scripts/mint.mjs",
+    "provenance": "node scripts/provenance.mjs"
+  }
+}

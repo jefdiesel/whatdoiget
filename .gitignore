@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+.vercel/
+
+# Generated: `npm run mint` rebuilds all 180 SVGs + metadata from source.
+out/
+
+# Dev-only comparison tool. Holds crops of the 1978 poster scan, which is not
+# ours to redistribute, so it stays out of the repo.
+compare/
+compare.html
