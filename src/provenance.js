@@ -23,6 +23,7 @@ export const IN_POSTER = new Set([
  "1|true|I|B|standard",
  "1|true|UP 36348|B|red",
  "1|true|WHAT|B|standard",
+ "2|false|BUZZCOCKS|B|standard",
  "2|false|GET?|B|red",
  "2|false|UP 36348|B|standard",
  "2|false|WHAT|B|standard",
@@ -43,6 +44,13 @@ export const IN_POSTER = new Set([
 // The same states as objects, so the edition can issue them deliberately
 // rather than leaving them to a shuffle.
 export const POSTER_STATES = [
+ {
+  "rot": 2,
+  "mirror": false,
+  "word": "BUZZCOCKS",
+  "plane": "B",
+  "plate": "standard"
+ },
  {
   "rot": 3,
   "mirror": true,

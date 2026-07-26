@@ -32,7 +32,13 @@ import { GLYPHS } from './glyphs.js';
 //   I 0.409   DO 1.436   GET? 2.483   WHAT 3.149   BUZZCOCKS 3.406   UP 36348 5.207
 export const CAP_H = 0.070;   // cap height, as a fraction of the tile
 
-export const wordWidth = (w) => GLYPHS[w].w * CAP_H;
+// The wordmark is a logo, not a word: the poster sets it at its own size, wider
+// than the copy around it. Measured off the source at 0.40 of the tile, against
+// 0.238 if it were merely cap-matched to the plain words.
+export const WORDMARK_W = 0.400;
+
+export const wordWidth = (w) =>
+  w === 'BUZZCOCKS' ? WORDMARK_W : GLYPHS[w].w * CAP_H;
 
 // The 3:2 split depends on this cap height. Sweeping it against the real
 // geometry in all eight orientations, at the measured type inset of 0.037:
