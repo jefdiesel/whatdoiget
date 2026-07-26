@@ -10,15 +10,8 @@ export const ABOUT_HTML = `
     <div class="row"><dt>Mint price</dt><dd>0.001978 ETH</dd></div>
     <div class="row"><dt>Mint date</dt><dd>1 August</dd></div>
     <div class="row"><dt>Chain</dt><dd>Ethereum mainnet</dd></div>
-    <div class="row"><dt>Artwork</dt><dd>SVG, on chain</dd></div>
+    <div class="row"><dt>Artwork</dt><dd>SVG on chain</dd></div>
   </dl>
-  <p>
-    Every item is vector, not a picture of one. The whole edition is 379 KB of
-    SVG — the smallest piece is 280 bytes, the largest just under 6 KB — because
-    each square is one cut, one word and a colour, and the type is stored as
-    outlines rather than pulled from a font. Nothing is fetched at view time.
-  </p>
-
   <hr>
 
   <p class="kicker">Buzzcocks · United Artists UP 36348 · February 1978</p>
