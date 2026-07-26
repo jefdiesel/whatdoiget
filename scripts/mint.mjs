@@ -10,7 +10,8 @@ const items = enumerateEdition('UP36348', { posterFirst: POSTER_STATES });
 const tally = {};
 
 for (const item of items) {
-  await writeFile(new URL(`${item.id}.svg`, out), renderItem(item));
+  const svg = renderItem(item);
+  await writeFile(new URL(`${item.id}.svg`, out), svg);
   const t = traitsOf(item);
   // Items whose exact state was printed in the 1978 poster carry its authorship.
   if (IN_POSTER.has(`${item.rot}|${item.mirror}|${item.word}|${item.plane}|${item.plate}`)) {
@@ -24,7 +25,9 @@ for (const item of items) {
       'measured from the source: one cut at 21.4 degrees, eight orientations, six words, ' +
       'three planes. 180 items, no duplicates.',
     external_url: 'https://example.invalid/what-do-i-get-1978',
-    image: `ipfs://REPLACE/${item.id}.svg`,
+    // The artwork travels inside the metadata rather than pointing at a host,
+    // so a token carries its own image with nothing to resolve or go missing.
+    image: `data:image/svg+xml;base64,${Buffer.from(svg, 'utf8').toString('base64')}`,
     attributes: Object.entries(t).map(([trait_type, value]) => ({ trait_type, value })),
   }, null, 2));
 

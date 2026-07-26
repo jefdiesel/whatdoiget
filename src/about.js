@@ -5,7 +5,7 @@ export const ABOUT_HTML = `
 
   <h2>The Drop</h2>
   <dl>
-    <div class="row"><dt>Edition</dt><dd>180 single items</dd></div>
+    <div class="row"><dt>Edition</dt><dd>180</dd></div>
     <div class="row"><dt>Allowlist</dt><dd>Free WL offered before mint</dd></div>
     <div class="row"><dt>Mint price</dt><dd>0.001978 ETH</dd></div>
     <div class="row"><dt>Mint date</dt><dd>1 August</dd></div>
@@ -117,7 +117,7 @@ export const ABOUT_HTML = `
 
   <h2>This Collection</h2>
   <p>
-    180 single items, each one square of the promo poster. Every parameter is
+    180 items, each one square of the promo poster. Every parameter is
     measured from the source rather than invented: the cut runs at 21.4°, fitted
     across 61 of the poster's 63 tiles; the ink covers 54.6% of the square; the
     type sits at a cap height of 0.070 with a 0.037 inset.

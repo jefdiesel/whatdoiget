@@ -1,6 +1,6 @@
 # What Do I Get, 1978
 
-180 single items, each one square of the Buzzcocks promo poster for
+180 items, each one square of the Buzzcocks promo poster for
 *What Do I Get?* (United Artists **UP 36348**, February 1978), designed by
 Malcolm Garrett.
 
