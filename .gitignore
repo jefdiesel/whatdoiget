@@ -22,3 +22,9 @@ contracts/cache/
 contracts/broadcast/
 contracts/lib/
 contracts/node_modules/
+
+# Never commit keys or RPC endpoints
+.env
+.env.*
+contracts/.env
+contracts/.env.*

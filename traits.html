@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Do I Get, 1978 — Traits</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+  main { display: grid; grid-template-columns: 230px minmax(0,1fr); gap: 28px;
+         align-items: start; padding: 24px 22px 90px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+
+  .side h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif;
+             font-size: 22px; margin: 0 0 4px; transform: skewX(-9deg); }
+  .bar { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; }
+  #count { opacity: .55; }
+  .facet { margin: 0 0 16px; }
+  .facet h3 { font-size: 10px; letter-spacing: .18em; opacity: .5; margin: 0 0 5px;
+              border-bottom: 1px solid rgba(22,32,43,.25); padding-bottom: 3px; }
+  .chip { display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+          width: 100%; text-align: left; background: none; color: var(--ink);
+          border: 0; border-bottom: 1px solid rgba(22,32,43,.12);
+          padding: 4px 2px; cursor: pointer; font: inherit; text-transform: uppercase;
+          letter-spacing: .05em; font-size: 11px; }
+  .chip em { font-style: normal; opacity: .45; font-size: 10px; }
+  .chip:hover { background: rgba(22,32,43,.07); }
+  .chip.on { background: var(--ink); color: var(--paper); }
+  .chip.on em { opacity: .7; }
+
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  #grid figure { margin: 0; cursor: pointer; }
+  #grid svg { width: 100%; height: auto; display: block; outline: 1px solid rgba(22,32,43,.15); }
+  #grid figcaption { display: flex; gap: 6px; align-items: baseline; font-size: 10px;
+                     padding-top: 3px; opacity: .7; }
+  #grid figcaption span { opacity: .6; }
+  #grid figcaption .prov { font-style: normal; color: var(--spot); margin-left: auto; font-weight: bold; }
+  #grid figure:hover svg { outline: 3px solid var(--spot); }
+
+  select { font: inherit; text-transform: uppercase; letter-spacing: .05em;
+           border: 2px solid var(--ink); background: var(--paper); padding: 5px 8px; }
+  #clear { font-size: 11px; padding: 5px 9px; }
+
+  #overlay { position: fixed; inset: 0; background: rgba(236,228,212,.97); z-index: 20;
+             display: none; overflow-y: auto; }
+  #overlay.on { display: block; }
+  #overlay .inner { min-height: 100%; box-sizing: border-box; display: flex;
+                    align-items: flex-start; justify-content: center; flex-wrap: wrap;
+                    gap: clamp(20px,3vw,44px); padding: clamp(18px,3vw,40px); }
+  #overlay svg { width: min(58vh, 46vw, 520px); min-width: 220px; height: auto; display: block;
+                 box-shadow: 0 20px 60px rgba(22,32,43,.28); }
+  #meta { min-width: 260px; flex: 0 1 320px; }
+  #meta h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif; font-size: 30px;
+             margin: -.16em 0 12px; transform: skewX(-9deg); }
+  #meta dl { margin: 0; border-top: 2px solid var(--ink); }
+  #meta .row { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0;
+               border-bottom: 1px solid rgba(22,32,43,.22); }
+  #meta dt { opacity: .6; } #meta dd { margin: 0; font-weight: bold; display: flex; gap: 8px; }
+  #meta dd em { font-style: normal; font-weight: normal; opacity: .45; }
+  #meta dd.prov { color: var(--spot); }
+  #close { margin-top: 16px; }
+  .note { text-transform: none; letter-spacing: 0; font-family: Helvetica, Arial, sans-serif;
+          font-size: 13px; opacity: .7; }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
+           border-top: 3px solid var(--ink); display: flex; align-items: center; gap: .3em;
+           padding: 7px 16px; font-size: 19px; line-height: 1;
+           font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif; text-transform: uppercase; }
+  footer > * { transform: skewX(-9deg); }
+  footer .mark { font-weight: 700; }
+  footer a { color: var(--ink); text-decoration: none; }
+  footer a:hover { color: var(--spot); }
+  footer .dot { opacity: .5; }
+</style>
+</head>
+<body>
+<main>
+  <div class="side">
+    <h2>Traits</h2>
+    <div class="bar">
+      <span id="count"></span>
+      <span style="flex:1"></span>
+    </div>
+    <div class="bar">
+      <select id="sort">
+        <option value="rarity">By rarity</option>
+        <option value="id">By number</option>
+      </select>
+      <button id="clear" class="ghost">Clear</button>
+    </div>
+    <div id="filters"></div>
+    <p class="note">Rarity is one over how often each trait occurs, summed.
+      <b>Malcolm Garrett 1978</b> is weighted to rank first — those 36 reproduce a
+      state actually printed in 1978, which is the scarce thing here even though
+      36 is commoner than a Red Inverted plate.</p>
+  </div>
+  <div id="grid"></div>
+</main>
+
+<div id="overlay">
+  <div class="inner">
+    <div id="art"></div>
+    <div id="meta">
+      <h2 id="title"></h2>
+      <dl id="traits"></dl>
+      <button id="close" class="ghost">Close</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="mark">What Do I Get, 1978</span>
+  <span class="dot">·</span>
+  <a href="./index.html">7:9</a>
+  <span class="dot">·</span>
+  <a href="./all.html">12:15</a>
+  <span class="dot">·</span>
+  <a href="./mint.html">Mint</a>
+</footer>
+
+<script type="module" src="./src/traits.js"></script>
+</body>
+</html>

@@ -1,5 +1,2 @@
-# One address per line. Blank lines and # comments ignored.
-# Replace these with the real allowlist before mint.
-0x0000000000000000000000000000000000000001
-0x0000000000000000000000000000000000000002
-0x0000000000000000000000000000000000000003
+# Sepolia test allowlist. Replace before mainnet.
+0xDCD064E82499652BF5f132afD293c1B4a2958800

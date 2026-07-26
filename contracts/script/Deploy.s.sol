@@ -31,10 +31,11 @@ contract Deploy is Script {
         console.log("owner           ", owner);
         console.log("phase           ", "Closed - set the root, then setPhase(1)");
 
-        // Fail loudly here rather than after a real deploy: if the renderer is
-        // broken on chain, the art is wrong and no amount of front end fixes it.
-        string memory svg = nft.renderSVG(1);
+        // Sanity-check the CATALOGUE, not a token: renderSVG needs a minted
+        // token and nothing is minted at deploy, so calling it here reverts and
+        // takes the whole broadcast down with it.
+        string memory svg = nft.renderArtwork(1);
         require(bytes(svg).length > 0, "renderer returned nothing");
-        console.log("token 1 SVG     ", bytes(svg).length, "bytes");
+        console.log("artwork 1 SVG   ", bytes(svg).length, "bytes");
     }
 }
