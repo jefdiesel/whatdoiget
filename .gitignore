@@ -10,3 +10,7 @@ out/
 compare/
 compare.html
 .vercel
+
+# Local-only layouts, not part of the published site
+6x3.html
+3x3.html
