@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Do I Get, 1978 — Mint</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+  main { max-width: 62ch; margin: 0 auto; padding: 34px 22px 120px; }
+  .mint h2 {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 30px; margin: 0 0 6px; transform: skewX(-9deg);
+  }
+  .mint .kicker { letter-spacing: .1em; font-size: 11px; opacity: .55; margin: 0 0 18px; }
+  dl { margin: 0 0 20px; border-top: 2px solid var(--ink); }
+  .row { display: flex; justify-content: space-between; gap: 20px; padding: 7px 0;
+         border-bottom: 1px solid rgba(22,32,43,.22); }
+  .row dt { opacity: .6; } .row dd { margin: 0; font-weight: bold; }
+  .row dd.warn { color: var(--spot); }
+  #wallets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
+  .wallet { display: flex; align-items: center; gap: 8px; background: none;
+            color: var(--ink); border: 2px solid var(--ink); }
+  .wallet:hover { background: var(--ink); color: var(--paper); }
+  #action { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  #action select { font: inherit; padding: 7px 10px; border: 2px solid var(--ink);
+                   background: var(--paper); text-transform: uppercase; }
+  .primary { background: var(--spot); border-color: var(--spot); color: #fff; }
+  .note { text-transform: none; letter-spacing: 0; font-size: 13px; opacity: .75;
+          font-family: Helvetica, Arial, sans-serif; margin: 6px 0 0; width: 100%; }
+  #error { text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--spot);
+           font-family: Helvetica, Arial, sans-serif; margin-top: 14px; min-height: 1.4em; }
+  #error a { color: var(--spot); }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
+           border-top: 3px solid var(--ink); display: flex; align-items: center;
+           gap: .3em; padding: 8px 16px; font-size: 20px;
+           font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+           text-transform: uppercase; line-height: 1; }
+  footer > * { transform: skewX(-9deg); }
+  footer .mark { font-weight: 700; }
+  footer a { color: var(--ink); text-decoration: none; }
+  footer a:hover { color: var(--spot); }
+  footer .dot { opacity: .5; }
+</style>
+</head>
+<body data-contract="" data-network="sepolia">
+
+<main class="mint">
+  <p class="kicker">Buzzcocks · United Artists UP 36348 · February 1978</p>
+  <h2>Mint</h2>
+
+  <div id="status"></div>
+  <div id="wallets"></div>
+  <div id="action"></div>
+  <div id="error"></div>
+</main>
+
+<footer>
+  <span class="mark">What Do I Get, 1978</span>
+  <span class="dot">·</span>
+  <a href="./index.html">7:9</a>
+  <span class="dot">·</span>
+  <a href="./all.html">12:15</a>
+</footer>
+
+<script type="module" src="./src/mint.js"></script>
+</body>
+</html>

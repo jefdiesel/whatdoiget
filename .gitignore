@@ -14,3 +14,11 @@ compare.html
 # Local-only layouts, not part of the published site
 6x3.html
 3x3.html
+capture.html
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+contracts/lib/
+contracts/node_modules/

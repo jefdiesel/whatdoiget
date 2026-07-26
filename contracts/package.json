@@ -1,0 +1,10 @@
+{
+  "name": "wdig-contracts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node script/GenerateData.mjs",
+    "allowlist": "node script/allowlist.mjs"
+  },
+  "dependencies": { "viem": "^2.21.0" }
+}
