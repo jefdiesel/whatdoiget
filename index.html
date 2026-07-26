@@ -5,11 +5,22 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>What Do I Get, 1978 — 7 x 9</title>
 <link rel="stylesheet" href="./style.css">
-<style>#poster { width: min(94vw, calc((100vh - 190px) * 7 / 9)); }</style>
+<style>.sheet { width: min(94vw, calc((100vh - 150px) * 7 / 9)); }</style>
 </head>
 <body>
 <main>
-  <div id="poster" data-cols="7" data-rows="9"></div>
+  <div class="sheet">
+    <div id="poster" data-cols="7" data-rows="9"></div>
+    <div class="banner">
+      <span class="mark">What Do I Get, 1978</span>
+      <span class="dot">·</span>
+      <a href="./all.html">12:15</a>
+      <span class="dot">·</span>
+      <a href="#about" id="about-open">About</a>
+      <span class="dot">·</span>
+      <button id="redistribute"><span>Redistribute</span></button>
+    </div>
+  </div>
 </main>
 
 <div id="overlay">
@@ -25,16 +36,11 @@
   </div>
 </div>
 
+<div id="about">
+  <button id="about-close"><span>Close</span></button>
+  <div class="prose" id="about-body"></div>
+</div>
+
 <script type="module" src="./src/app.js"></script>
-<footer>
-  <span class="mark">What Do I Get, 1978</span>
-  <span class="dot">·</span>
-  <a href="./all.html">12:15</a>
-  <span class="dot">·</span>
-  <a href="./about.html">About</a>
-  <span class="dot">·</span>
-  <button id="redistribute"><span>Redistribute</span></button>
-</footer>
-<script type="module" src="./src/fitbar.js"></script>
 </body>
 </html>

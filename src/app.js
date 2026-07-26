@@ -12,6 +12,8 @@
 
 import { enumerateEdition, renderItem, traitsOf } from './item.js';
 import { POSTER_STATES } from './provenance.js';
+import { fitBanner } from './fitbar.js';
+import { ABOUT_HTML } from './about.js';
 
 const poster = document.getElementById('poster');
 const COLS = Number(poster.dataset.cols);
@@ -80,7 +82,18 @@ function redistribute() {
     fig.onclick = () => open(item);
     poster.append(fig);
   }
+  fitBanner();
 }
+
+// About is an overlay, not a page you navigate away from
+const about = document.getElementById('about');
+document.getElementById('about-body').innerHTML = ABOUT_HTML;
+const closeAbout = () => { about.classList.remove('on'); history.replaceState(null, '', location.pathname); };
+document.getElementById('about-open').onclick = (e) => { e.preventDefault(); about.classList.add('on'); };
+document.getElementById('about-close').onclick = closeAbout;
+about.addEventListener('click', (e) => { if (e.target === about) closeAbout(); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAbout(); });
+if (location.hash === '#about') about.classList.add('on');
 
 document.getElementById('redistribute').onclick = redistribute;
 redistribute();

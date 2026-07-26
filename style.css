@@ -6,25 +6,29 @@ body {
   letter-spacing: .06em; text-transform: uppercase;
 }
 
-/* The banner across the bottom of the 1978 poster: a heavy rule, then one DENSE
-   line of condensed oblique caps - single middots, tight word spacing - running
-   edge to edge. The type is sized so the line exactly fills the measure. */
-footer {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
-  background: var(--paper); border-top: 3px solid var(--ink);
-  display: flex; align-items: center; gap: .26em; padding: 5px 14px 7px;
+/* The banner is part of the SHEET, not the page: it is exactly as wide as the
+   grid and sits directly under the last row of tiles, the way it does on the
+   1978 poster. It scrolls with the artwork - it is not pinned to the viewport.
+   One dense line of condensed oblique caps, single middots, edge to edge. */
+.sheet { display: flex; flex-direction: column; }
+.sheet #poster { width: 100%; }
+
+.banner {
+  background: var(--paper);
+  display: flex; align-items: baseline; gap: .24em; padding: 7px 0 9px;
   font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-  font-size: 30px;   /* replaced at runtime by src/fitbar.js */
+  font-size: 26px;   /* replaced at runtime by src/fitbar.js */
   line-height: 1; text-transform: uppercase; letter-spacing: .01em;
 }
-footer > * { white-space: nowrap; }
-/* skew the letterforms, never the red box - a skewed block reads as a mistake */
-footer .mark, footer a, footer .dot, #redistribute span { display: inline-block; transform: skewX(-9deg); }
-footer a { color: var(--ink); text-decoration: none; }
-footer a:hover { color: var(--spot); }
-footer .dot { opacity: .5; }
+.banner > * { white-space: nowrap; }
+/* skew the letterforms, never the red box */
+.banner .mark, .banner a, .banner .dot, #redistribute span {
+  display: inline-block; transform: skewX(-9deg);
+}
+.banner a { color: var(--ink); text-decoration: none; }
+.banner a:hover { color: var(--spot); }
+.banner .dot { opacity: .5; }
 
-/* Redistribute rides in the line at the same size, knocked out of red */
 #redistribute {
   font: inherit; text-transform: inherit; letter-spacing: inherit;
   background: var(--spot); color: #fff; border: 0; cursor: pointer;
@@ -33,21 +37,6 @@ footer .dot { opacity: .5; }
 #redistribute:hover { background: var(--ink); }
 
 .grow { flex: 1; }
-footer .sep { opacity: .35; font-size: 19px; }
-
-/* Redistribute: a red square, flush to the end of the bar */
-#redistribute {
-  width: 104px; height: 104px; flex: none; padding: 0 8px;
-  background: var(--spot); border: 0; color: #fff; cursor: pointer;
-  font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-  font-size: 15px; line-height: 1.08; letter-spacing: .01em;
-  text-transform: uppercase; text-align: center; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-}
-/* skew the label, not the square, so the block stays flush to the corner */
-#redistribute span { display: block; transform: skewX(-9deg); }
-#redistribute:hover { background: var(--ink); }
-
 .grow { flex: 1; }
 
 button, a.btn {
@@ -60,7 +49,7 @@ button:hover, a.btn:hover { background: var(--ink); border-color: var(--ink); co
 button.ghost, a.btn.ghost { background: none; color: var(--ink); border-color: var(--ink); }
 button.ghost:hover, a.btn.ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
-main { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 22px 22px clamp(64px, 6vw, 96px); }
+main { display: flex; flex-direction: column; align-items: center; padding: 24px 22px 40px; }
 
 /* the grid, butted edge to edge */
 #poster { display: grid; gap: 0; background: var(--ink); }
@@ -97,3 +86,48 @@ figcaption { opacity: .55; align-self: flex-start; }
 #meta dt { opacity: .6; } #meta dd { margin: 0; font-weight: bold; }
 #meta dd.prov { color: var(--spot); }
 #nav { display: flex; gap: 8px; margin-top: 16px; }
+
+/* --- about overlay ------------------------------------------------ */
+.prose {
+    text-transform: none; letter-spacing: 0; font-size: 15px; line-height: 1.62;
+    max-width: 62ch; margin: 0 auto; font-family: Helvetica, Arial, sans-serif;
+  }
+  .prose h2 {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 26px; letter-spacing: .02em; text-transform: uppercase;
+    transform: skewX(-9deg); margin: 44px 0 4px;
+  }
+  .prose h2:first-of-type { margin-top: 0; }
+  .prose .kicker {
+    text-transform: uppercase; letter-spacing: .1em; font-size: 11px;
+    opacity: .55; margin: 0 0 14px; font-family: 'Arial Narrow', Helvetica, sans-serif;
+  }
+  .prose p { margin: 0 0 14px; }
+  .prose a:not(.btn) { color: var(--spot); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .prose a:not(.btn):hover { background: var(--spot); color: #fff; border-color: var(--spot); }
+  .prose dl { margin: 0 0 14px; border-top: 2px solid var(--ink); }
+  .prose .row {
+    display: flex; justify-content: space-between; gap: 24px; padding: 7px 0;
+    border-bottom: 1px solid rgba(22,32,43,.22);
+    text-transform: uppercase; letter-spacing: .05em; font-size: 12px;
+    font-family: 'Arial Narrow', Helvetica, sans-serif;
+  }
+  .prose .row dt { opacity: .6; } .prose .row dd { margin: 0; font-weight: bold; text-align: right; }
+  .prose hr { border: 0; border-top: 3px solid var(--ink); margin: 44px 0; }
+  .prose .note { font-size: 13px; opacity: .72; }
+  .listen { margin: 22px 0 8px; }
+
+#about {
+  position: fixed; inset: 0; z-index: 30; display: none;
+  background: rgba(236,228,212,.98); overflow-y: auto; padding: 46px 22px 60px;
+}
+#about.on { display: block; }
+#about-close {
+  position: fixed; top: 18px; right: 22px; z-index: 31;
+  font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+  font-size: 22px; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--ink); color: var(--paper); border: 0; cursor: pointer;
+  padding: 6px 14px 8px;
+}
+#about-close span { display: inline-block; transform: skewX(-9deg); }
+#about-close:hover { background: var(--spot); }

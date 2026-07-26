@@ -1,44 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>What Do I Get, 1978 — About</title>
-<link rel="stylesheet" href="./style.css">
-<style>
-  .prose {
-    text-transform: none; letter-spacing: 0; font-size: 15px; line-height: 1.62;
-    max-width: 62ch; margin: 0 auto; padding: 34px 22px 160px;
-    font-family: Helvetica, Arial, sans-serif;
-  }
-  .prose h2 {
-    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-    font-size: 26px; letter-spacing: .02em; text-transform: uppercase;
-    transform: skewX(-9deg); margin: 44px 0 4px;
-  }
-  .prose h2:first-of-type { margin-top: 0; }
-  .prose .kicker {
-    text-transform: uppercase; letter-spacing: .1em; font-size: 11px;
-    opacity: .55; margin: 0 0 14px; font-family: 'Arial Narrow', Helvetica, sans-serif;
-  }
-  .prose p { margin: 0 0 14px; }
-  .prose a:not(.btn) { color: var(--spot); text-decoration: none; border-bottom: 1px solid currentColor; }
-  .prose a:not(.btn):hover { background: var(--spot); color: #fff; border-color: var(--spot); }
-  .prose dl { margin: 0 0 14px; border-top: 2px solid var(--ink); }
-  .prose .row {
-    display: flex; justify-content: space-between; gap: 24px; padding: 7px 0;
-    border-bottom: 1px solid rgba(22,32,43,.22);
-    text-transform: uppercase; letter-spacing: .05em; font-size: 12px;
-    font-family: 'Arial Narrow', Helvetica, sans-serif;
-  }
-  .prose .row dt { opacity: .6; } .prose .row dd { margin: 0; font-weight: bold; text-align: right; }
-  .prose hr { border: 0; border-top: 3px solid var(--ink); margin: 44px 0; }
-  .prose .note { font-size: 13px; opacity: .72; }
-  .listen { margin: 22px 0 8px; }
-</style>
-</head>
-<body>
-<div class="prose">
+// The about copy, kept in one place and shown as an overlay on both views
+// rather than as a page you navigate away from.
+export const ABOUT_HTML = `
 
   <p class="kicker">Buzzcocks · United Artists UP 36348 · February 1978</p>
 
@@ -164,15 +126,4 @@
     This is an unofficial project, not affiliated with or endorsed by Buzzcocks,
     Malcolm Garrett, or United Artists.
   </p>
-
-</div>
-<footer>
-  <span class="mark">What Do I Get, 1978</span>
-  <span class="dot">·</span>
-  <a href="./index.html">7:9</a>
-  <span class="dot">·</span>
-  <a href="./all.html">12:15</a>
-</footer>
-<script type="module" src="./src/fitbar.js"></script>
-</body>
-</html>
+`;
