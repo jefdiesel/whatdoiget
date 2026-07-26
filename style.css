@@ -66,17 +66,34 @@ main { display: flex; flex-direction: column; align-items: center; padding: 24px
 figcaption { opacity: .55; align-self: flex-start; }
 
 /* item overlay */
+/* A centred flex container overflows ABOVE its scroll origin, which strands the
+   top of the content - on a phone that means Close and Prev/Next are
+   unreachable. So the overlay scrolls, and an inner wrapper does the centring. */
 #overlay {
   position: fixed; inset: 0; background: rgba(236,228,212,.97); z-index: 20;
-  display: none; align-items: center; justify-content: center; gap: 40px;
-  padding: 40px; flex-wrap: wrap;
+  display: none; overflow-y: auto; -webkit-overflow-scrolling: touch;
 }
-#overlay.on { display: flex; }
+#overlay.on { display: block; }
+#overlay .inner {
+  min-height: 100%; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(20px, 3vw, 44px); padding: clamp(18px, 3vw, 40px); flex-wrap: wrap;
+}
+/* Constrain the art by viewport WIDTH as well as height, or it shoves the
+   trait panel off screen on a narrow window. */
+#overlay #art { flex: 0 1 auto; min-width: 0; }
 #overlay svg {
-  width: min(56vh, 92vw); height: auto; display: block;
+  width: min(58vh, 46vw, 560px); min-width: 220px; height: auto; display: block;
   box-shadow: 0 20px 60px rgba(22,32,43,.28);
 }
-#meta { color: var(--ink); min-width: 250px; }
+@media (max-width: 700px) {
+  #overlay .inner { align-items: flex-start; padding-top: 24px; padding-bottom: 40px; }
+  #overlay svg { width: min(86vw, 420px); }
+  #meta { flex: 1 1 100%; min-width: 0; }
+  #nav { position: sticky; bottom: 0; background: rgba(236,228,212,.97);
+         padding: 10px 0 4px; margin-top: 12px; }
+}
+#meta { color: var(--ink); flex: 0 1 300px; min-width: 240px; }
 #meta h2 {
   font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
   font-size: 30px; margin: 0 0 12px; transform: skewX(-9deg);

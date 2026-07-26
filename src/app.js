@@ -51,7 +51,9 @@ function open(item) {
 }
 
 const close = () => overlay.classList.remove('on');
-overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay || e.target.classList.contains('inner')) close();
+});
 document.getElementById('close').onclick = close;
 
 // Step through the whole edition in numerical order, not just what is on screen.
