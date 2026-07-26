@@ -15,7 +15,7 @@ body {
 
 .banner {
   background: var(--paper);
-  display: flex; align-items: baseline; gap: .24em; padding: 7px 0 9px;
+  display: flex; align-items: center; gap: .24em; padding: 7px 0 9px;
   font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
   font-size: 26px;   /* replaced at runtime by src/fitbar.js */
   line-height: 1; text-transform: uppercase; letter-spacing: .01em;
@@ -25,6 +25,9 @@ body {
 .banner .mark, .banner a, .banner .dot, #redistribute span {
   display: inline-block; transform: skewX(-9deg);
 }
+.banner .mark { font-weight: 700; }
+/* the red block ends the line, flush to the right edge of the sheet */
+#redistribute { margin-right: 0; }
 .banner a { color: var(--ink); text-decoration: none; }
 .banner a:hover { color: var(--spot); }
 .banner .dot { opacity: .5; }
@@ -32,7 +35,7 @@ body {
 #redistribute {
   font: inherit; text-transform: inherit; letter-spacing: inherit;
   background: var(--spot); color: #fff; border: 0; cursor: pointer;
-  padding: .02em .24em .06em; line-height: 1;
+  padding: .12em .26em .16em; line-height: 1;
 }
 #redistribute:hover { background: var(--ink); }
 

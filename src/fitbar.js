@@ -14,12 +14,16 @@ function fit() {
   for (let pass = 0; pass < 6; pass++) {
     bar.style.fontSize = `${size}px`;
     const gap = parseFloat(getComputedStyle(bar).columnGap) || 0;
-    const used = [...bar.children].reduce((w, c) => w + c.getBoundingClientRect().width, 0)
+    // offsetWidth, not getBoundingClientRect: the latter returns the TRANSFORMED
+    // box, and the skewed glyphs measure wider than they lay out, which makes
+    // the line land short of the right edge.
+    const used = [...bar.children].reduce((w, c) => w + c.offsetWidth, 0)
       + gap * (bar.children.length - 1);
     if (!used) return;
-    const next = size * (target / used);
-    if (Math.abs(next - size) < 0.05) break;
-    size = Math.max(9, next);
+    const next = Math.max(9, size * (target / used));
+    const settled = Math.abs(next - size) < 0.05;
+    size = next;
+    if (settled) break;
   }
   bar.style.fontSize = `${size}px`;
 }
