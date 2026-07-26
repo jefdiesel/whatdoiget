@@ -9,3 +9,4 @@ out/
 # ours to redistribute, so it stays out of the repo.
 compare/
 compare.html
+.vercel

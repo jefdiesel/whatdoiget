@@ -8,14 +8,6 @@
 <style>#poster { width: min(94vw, calc((100vh - 190px) * 12 / 15)); }</style>
 </head>
 <body>
-<header>
-  <h1>What Do I Get, 1978</h1>
-  <span class="grow"></span>
-  <a class="btn ghost" href="./index.html">7 × 9</a>
-  <a class="btn ghost" href="./about.html">About</a>
-  <button id="redistribute">Redistribute</button>
-</header>
-
 <main>
   <div id="poster" data-cols="12" data-rows="15"></div>
 </main>
@@ -34,5 +26,15 @@
 </div>
 
 <script type="module" src="./src/app.js"></script>
+<footer>
+  <span class="mark">What Do I Get, 1978</span>
+  <span class="dot">·</span>
+  <a href="./index.html">7:9</a>
+  <span class="dot">·</span>
+  <a href="./about.html">About</a>
+  <span class="dot">·</span>
+  <button id="redistribute"><span>Redistribute</span></button>
+</footer>
+<script type="module" src="./src/fitbar.js"></script>
 </body>
 </html>
