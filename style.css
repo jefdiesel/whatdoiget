@@ -111,6 +111,25 @@ figcaption { opacity: .55; align-self: flex-start; }
 #meta dd.prov { color: var(--spot); }
 #nav { display: flex; gap: 8px; margin-top: 16px; }
 
+/* --- mint call to action ------------------------------------------ */
+/* The banner cannot carry this: fitbar.js scales that line to the exact width
+   of the sheet, so every item added shrinks the type for all the others. This
+   sits outside the sheet instead, in the corner the poster leaves empty.
+   z-index 10 keeps it UNDER the item overlay (20) and the about panel (30), so
+   it never floats over a dialogue. */
+.mint-cta {
+  position: fixed; top: 18px; right: 22px; z-index: 10;
+  font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+  font-size: 22px; line-height: 1; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--spot); color: #fff; text-decoration: none;
+  padding: 6px 14px 8px; border: 0; cursor: pointer;
+}
+.mint-cta span { display: inline-block; transform: skewX(-9deg); }
+.mint-cta:hover { background: var(--ink); color: var(--paper); }
+@media (max-width: 640px) {
+  .mint-cta { top: 10px; right: 12px; font-size: 17px; padding: 5px 10px 6px; }
+}
+
 /* --- about overlay ------------------------------------------------ */
 .prose {
     text-transform: none; letter-spacing: 0; font-size: 15px; line-height: 1.62;
