@@ -26,6 +26,24 @@ export const ABOUT_HTML = `
     UP 36348</em>. A song about wanting something and not getting it, filed under
     a catalogue number and moved as stock.
   </p>
+
+  <figure class="source">
+    <img src="./img/up36348-1978.jpg" width="1125" height="1532" loading="lazy"
+         alt="The 1978 United Artists promotional poster for the Buzzcocks single
+              What Do I Get?: a grid of squares, each split by the same diagonal
+              into dark blue and off-white, a few printed in red, each carrying a
+              word of the title or the band name in condensed italic caps. Along
+              the bottom: BUZZCOCKS · NEW PRODUCT · SINGLE ITEM · UP 36348 ·
+              WHAT DO I GET?">
+    <figcaption>
+      <b>The source.</b> Promotional poster for <em>What Do I Get?</em>, United
+      Artists UP 36348, February 1978. Designed by Malcolm Garrett. Reproduced
+      here to show what this collection was measured from — it is the subject of
+      the work, not part of it. Every number on this site was taken off this
+      scan.
+    </figcaption>
+  </figure>
+
   <p>
     The band making that point had a particular right to it. Thirteen months
     earlier Buzzcocks had put out <em>Spiral Scratch</em> themselves, on their own
@@ -244,8 +262,7 @@ export const ABOUT_HTML = `
   <p class="note">
     Every measurement, and how it was arrived at, is written up in
     <a href="https://github.com/jefdiesel/whatdoiget/blob/main/ANALYSIS.md"
-       target="_blank" rel="noopener">ANALYSIS.md</a> — including the nine tiles
-    that could not be identified and are not claimed. The
+       target="_blank" rel="noopener">ANALYSIS.md</a>. The
     <a href="https://github.com/jefdiesel/whatdoiget" target="_blank"
        rel="noopener">source</a> is public: the generator, the contract, and the
     test that holds them to each other.

@@ -156,6 +156,19 @@ figcaption { opacity: .55; align-self: flex-start; }
     font-family: 'Arial Narrow', Helvetica, sans-serif;
   }
   .prose .row dt { opacity: .6; } .prose .row dd { margin: 0; font-weight: bold; text-align: right; }
+  /* The source scan. Sized down hard: it is evidence for the argument, not the
+     artwork on sale, and it should not out-shout the edition it is cited in. */
+  .prose figure.source { margin: 24px 0 28px; }
+  .prose figure.source img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid rgba(22,32,43,.28);
+  }
+  .prose figure.source figcaption {
+    font-size: 12.5px; line-height: 1.5; opacity: .68; margin-top: 9px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .prose figure.source figcaption b { opacity: .85; }
+
   .prose hr { border: 0; border-top: 3px solid var(--ink); margin: 44px 0; }
   .prose .note { font-size: 13px; opacity: .72; }
   .listen { margin: 22px 0 8px; }
