@@ -6,7 +6,7 @@
 //
 // Provenance is then weighted so those items rank first. Say plainly what that
 // is: a DELIBERATE weighting, not something the statistics produce on their own.
-// 36 of 180 carry provenance, which is commoner than a Red Inverted plate (8),
+// 42 of 180 carry provenance, which is commoner than a Red Inverted plate (8),
 // so on raw frequency they would not top the list. They rank first because
 // reproducing a state Garrett actually printed in 1978 is the scarce thing about
 // this edition, and the score is built to say so.

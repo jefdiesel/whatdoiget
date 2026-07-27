@@ -24,6 +24,9 @@ const MINTED_TOPIC = '0x25b428dfde728ccfaddad7e29e4ac23c24ed7fd1a6e3e3f91894a9a0
 const EDITION = enumerateEdition('UP36348', { posterFirst: POSTER_STATES });
 const { ranked } = buildEdition();
 const rankById = new Map(ranked.map((r) => [r.id, r.rank]));
+// provenance is a property of the item, not a rank cutoff: read it from the
+// edition rather than assuming the first N ranks carry it.
+const provById = new Map(ranked.map((r) => [r.id, r.provenance]));
 
 const el = (id) => document.getElementById(id);
 const explorer = `https://${NETWORK === 'sepolia' ? 'sepolia.' : ''}etherscan.io`;
@@ -91,7 +94,7 @@ function render(shuffle = false) {
   // No captions in the block: they would sit between the rows and break it.
   // The number rides on the tile, and clicking gives the full detail.
   el('grid').innerHTML = list.map(({ tokenId, artwork }, i) => {
-    const prov = rankById.get(artwork) <= 36;
+    const prov = provById.get(artwork);
     return `<figure data-i="${i}" title="#${tokenId}">`
       + renderItem(EDITION[artwork - 1])
       + `<b class="tag${prov ? ' prov' : ''}">#${tokenId}</b></figure>`;
@@ -115,7 +118,7 @@ function openDetail({ tokenId, artwork, owner, tx }) {
     ...Object.entries(traitsOf(item)),
   ];
   let html = rows.map(([k, v]) => `<div class="row"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-  if (rank <= 36) {
+  if (provById.get(artwork)) {
     html += '<div class="row"><dt>Provenance</dt>'
       + '<dd class="prov">Malcolm Garrett 1978</dd></div>';
   }

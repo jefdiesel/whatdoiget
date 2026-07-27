@@ -65,7 +65,7 @@ function iou(a, b) {
 // word list, and it is recorded here rather than buried so the basis for each
 // of these is checkable against the image.
 const READ_BY_EYE = {
-  '0,3':  { rot: 3, mirror: true,  plane: 'B' },
+  '0,3':  { rot: 3, mirror: true,  plane: 'A' },
   '0,4':  { rot: 0, mirror: false, plane: 'B' },
   '3,1':  { rot: 0, mirror: false, plane: 'B' },
   '3,5':  { rot: 0, mirror: false, plane: 'B' },

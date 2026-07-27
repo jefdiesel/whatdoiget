@@ -28,3 +28,5 @@ contracts/node_modules/
 .env.*
 contracts/.env
 contracts/.env.*
+nine.html
+compare/

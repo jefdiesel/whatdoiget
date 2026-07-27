@@ -40,7 +40,7 @@ export const IN_POSTER = new Set([
  "3|false|UP 36348|B|standard",
  "3|false|WHAT|B|standard",
  "3|true|BUZZCOCKS|B|standard",
- "3|true|DO|B|standard",
+ "3|true|DO|A|standard",
  "3|true|GET?|B|standard",
  "3|true|UP 36348|B|standard",
  "3|true|WHAT|B|red",
@@ -75,7 +75,7 @@ export const POSTER_STATES = [
   "rot": 3,
   "mirror": true,
   "word": "DO",
-  "plane": "B",
+  "plane": "A",
   "plate": "standard"
  },
  {
