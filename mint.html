@@ -40,6 +40,15 @@
   footer a { color: var(--ink); text-decoration: none; }
   footer a:hover { color: var(--spot); }
   footer .dot { opacity: .5; }
+  #minted { margin-top: 28px; border-top: 3px solid var(--ink); padding-top: 16px; }
+  #minted h3 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif;
+               font-size: 22px; margin: 0 0 10px; transform: skewX(-9deg); }
+  .got { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 12px; }
+  .got figure { margin: 0; }
+  .got svg { width: 100%; height: auto; display: block; outline: 1px solid rgba(22,32,43,.2); }
+  .got figcaption { display: flex; gap: 8px; font-size: 10px; padding-top: 4px; }
+  .got figcaption span { opacity: .6; }
+  #minted a { color: var(--spot); }
 </style>
 </head>
 <body data-contract="0x98A9315e81d1afFEAFe8F931DCDcC9A3fb83736c" data-network="sepolia">
@@ -52,6 +61,7 @@
   <div id="wallets"></div>
   <div id="action"></div>
   <div id="error"></div>
+  <div id="minted" hidden></div>
 </main>
 
 <footer>

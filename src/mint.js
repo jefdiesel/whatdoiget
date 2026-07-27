@@ -9,6 +9,16 @@ import {
   available, connect, chainId, switchChain, call, send, SELECTOR,
   encodeUint, encodeAddress, encodeBytes32Array, toEth, short, CHAIN,
 } from './wallet.js';
+import { enumerateEdition, renderItem, traitsOf } from './item.js';
+import { POSTER_STATES } from './provenance.js';
+
+// Indexed by artwork number: artwork N is items[N - 1]. Used only AFTER a mint,
+// to show what was actually drawn - never before, which would undo the blind.
+const EDITION = enumerateEdition('UP36348', { posterFirst: POSTER_STATES });
+
+// keccak256("Minted(address,uint256,uint256)") - via cast sig-event
+const MINTED_TOPIC = '0x25b428dfde728ccfaddad7e29e4ac23c24ed7fd1a6e3e3f91894a9a073f5dfff';
+const explorer = () => `https://${NETWORK === 'sepolia' ? 'sepolia.' : ''}etherscan.io`;
 
 const CONTRACT = document.body.dataset.contract || '';
 const NETWORK = document.body.dataset.network || 'sepolia';
@@ -177,10 +187,71 @@ async function doMint(data, value) {
   const hash = await send(state.provider, {
     from: state.account, to: CONTRACT, data, value: value || undefined,
   });
-  el('error').innerHTML = `Sent. <a target="_blank" rel="noopener" `
-    + `href="https://${NETWORK === 'sepolia' ? 'sepolia.' : ''}etherscan.io/tx/${hash}">`
-    + `${short(hash)}</a>`;
-  setTimeout(refresh, 4000);
+
+  el('error').innerHTML = `Sent — <a target="_blank" rel="noopener" `
+    + `href="${explorer()}/tx/${hash}">${short(hash)}</a> · waiting for confirmation…`;
+
+  const receipt = await waitForReceipt(hash);
+  if (!receipt) {
+    el('error').innerHTML = `Sent — <a target="_blank" rel="noopener" `
+      + `href="${explorer()}/tx/${hash}">${short(hash)}</a>. Taking a while; `
+      + `check the explorer.`;
+    return;
+  }
+  if (BigInt(receipt.status) === 0n) {
+    el('error').innerHTML = `Reverted — <a target="_blank" rel="noopener" `
+      + `href="${explorer()}/tx/${hash}">${short(hash)}</a>`;
+    return;
+  }
+
+  el('error').textContent = '';
+  showMinted(readMintedLogs(receipt), hash);
+  await refresh();
+}
+
+async function waitForReceipt(hash, tries = 40) {
+  for (let i = 0; i < tries; i++) {
+    const r = await state.provider.request({
+      method: 'eth_getTransactionReceipt', params: [hash],
+    });
+    if (r) return r;
+    await new Promise((res) => setTimeout(res, 1500));
+  }
+  return null;
+}
+
+/// Minted(address indexed to, uint256 indexed tokenId, uint256 artwork)
+/// -> tokenId is topic 2; artwork is the only unindexed field, so it is the data.
+function readMintedLogs(receipt) {
+  return (receipt.logs || [])
+    .filter((l) => l.address.toLowerCase() === CONTRACT.toLowerCase()
+      && l.topics[0].toLowerCase() === MINTED_TOPIC)
+    .map((l) => ({
+      tokenId: Number(BigInt(l.topics[2])),
+      artwork: Number(BigInt(l.data)),
+    }));
+}
+
+/// What you actually drew.
+function showMinted(minted, hash) {
+  const box = el('minted');
+  if (!minted.length) { box.hidden = true; return; }
+  box.hidden = false;
+
+  box.innerHTML = `<h3>${minted.length === 1 ? 'You minted' : `You minted ${minted.length}`}</h3>`
+    + `<div class="got">` + minted.map(({ tokenId, artwork }) => {
+      const item = EDITION[artwork - 1];
+      const t = traitsOf(item);
+      return `<figure>${renderItem(item)}<figcaption>`
+        + `<b>#${tokenId}</b> <span>${t.Word} · ${t.Plate}</span>`
+        + `</figcaption></figure>`;
+    }).join('') + `</div>`
+    + `<p class="note"><a target="_blank" rel="noopener" href="${explorer()}/tx/${hash}">`
+    + `Transaction ${short(hash)}</a> · `
+    + minted.map(({ tokenId }) =>
+        `<a target="_blank" rel="noopener" href="${explorer()}/nft/${CONTRACT}/${tokenId}">#${tokenId}</a>`
+      ).join(' · ')
+    + `</p>`;
 }
 
 // --- wiring -----------------------------------------------------------------
