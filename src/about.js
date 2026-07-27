@@ -18,7 +18,7 @@ export const ABOUT_HTML = `
 
   <p class="kicker">Statement</p>
 
-  <h2>The Joke Is The Product</h2>
+  <h2>New Product · Single Item</h2>
   <p>
     In February 1978 United Artists papered record shops with an advert for a
     Buzzcocks single. Along the bottom, in Malcolm Garrett's condensed caps, it
@@ -27,13 +27,13 @@ export const ABOUT_HTML = `
     a catalogue number and moved as stock.
   </p>
   <p>
-    The band making that joke had a particular right to it. Thirteen months
+    The band making that point had a particular right to it. Thirteen months
     earlier Buzzcocks had put out <em>Spiral Scratch</em> themselves, on their own
     New Hormones label — recorded cheap, sleeved plain, distributed by hand. It is
     routinely called the founding document of British independent releasing: proof
     a band did not need a label's permission to exist on record. Then they signed
-    to United Artists. This poster is the major's advert for them. The joke about
-    the record being stock is being told from inside the warehouse, by the people
+    to United Artists. This poster is the major's advert for them. The line about
+    the record being stock is printed from inside the warehouse, by the people
     who had built the alternative and then walked into the machine.
   </p>
   <p>
@@ -193,7 +193,7 @@ export const ABOUT_HTML = `
   </p>
   <p>
     The result reads as a critique rather than a rejection. A Buzzcocks sleeve
-    looks like packaging for a product, which is precisely the joke a song called
+    looks like packaging for a product, which is precisely the argument a song called
     <em>What Do I Get?</em> is making. The poster this collection is measured
     from carries the line <em>New Product · Single Item</em> across the bottom.
   </p>
