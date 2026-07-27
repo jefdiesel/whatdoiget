@@ -74,8 +74,9 @@ scripts/provenance.mjs   matches the edition against the poster
 
 ## Type
 
-The `buzzcocks` wordmark is **Compacta Bold** (Fred Lambert, Letraset, 1963)
-with Garrett's modified overlapping double Z, stored as outlines. The remaining
+The `buzzcocks` wordmark is **Compacta Regular Italic** (Fred Lambert,
+Letraset, 1963), cut and re-spaced by Garrett in 1977 to nest the two Zs,
+stored as outlines. The remaining
 words are **Eurostile Bold Condensed Oblique** (after Aldo Novarese, Nebiolo,
 1962), also stored as outlines — so an item renders identically anywhere and
 needs no font file.

@@ -77,8 +77,9 @@ title atomised, plus band and catalogue number:
 | DO | 9 | 14.3% |
 | I | 9 | 14.3% |
 
-Near uniform. `BUZZCOCKS` is set in **Compacta Bold** with Garrett's modified
-overlapping double-Z.
+Near uniform. `BUZZCOCKS` is Garrett's wordmark, made in 1977 for the
+*Orgasm Addict* single: **Compacta Regular Italic** Letraset, sliced and
+re-spaced by hand to nest the two Zs.
 
 ## Planes
 
@@ -198,7 +199,46 @@ Short : long holds at roughly **3:2**. No duplicates — asserted at enumeration
 
 ## The wordmark
 
-`BUZZCOCKS` is never set as text. It is the band's own logo — Compacta Bold with
-Malcolm Garrett's modified overlapping double Z — traced from the artwork into
-**12 contours / 242 points** and embedded as an SVG path in `src/wordmark.js`.
-So it renders identically everywhere and needs no font file.
+`BUZZCOCKS` is never set as text. It is the band's own logo — Compacta Regular
+Italic, cut and re-spaced by Malcolm Garrett to nest the two Zs — traced from the artwork into
+**12 contours / 242 points**. The other five words are true outlines pulled from
+Eurostile Bold Condensed Oblique. All six live in `src/glyphs.js`, so an item
+renders identically anywhere and needs no font file.
+
+The type's ink extent is recorded per word, not assumed: the wordmark's Z rises
+to **1.171 cap heights**, and treating it as if it stopped at the cap line
+clipped it off the tile edge.
+
+## Provenance
+
+Each of the poster's 63 tiles was matched back against the edition — shape first
+(the cut has 180° rotational symmetry, so shape narrows the orientation to a
+pair), then the type's position to break the tie.
+
+| | |
+|---|---|
+| confidently identified | **54 of 63** tiles |
+| distinct states among them | **36** |
+| shape agreement | median 0.975, min 0.922 |
+
+Those 36 items carry the trait `Provenance: Malcolm Garrett 1978`. The remaining
+9 tiles could not be pinned down at 162px and are not claimed.
+
+## On chain
+
+The artwork is rendered by the contract, not stored as an image. Solidity has no
+floats, so no geometry is derived at runtime: every render parameter is
+extracted from the JavaScript renderer's actual output by
+`contracts/script/GenerateData.mjs` and only concatenated on chain.
+
+A differential test compares the **full SVG string for all 180 tokens** against
+the renderer this site uses — not a sample, not a hash. Change the JavaScript
+and the test fails until the table is regenerated, so the on-chain art cannot
+drift from the site.
+
+| | |
+|---|---|
+| Glyphs contract | 14,103 bytes |
+| Minter | 16,527 bytes |
+| both under EIP-170 | 24,576 bytes |
+| whole edition | 379 KB of SVG, mean 2,154 B per item |

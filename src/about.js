@@ -213,12 +213,14 @@ export const ABOUT_HTML = `
     <div class="row"><dt>Univers</dt><dd>Adrian Frutiger · Deberny &amp; Peignot · 1957</dd></div>
   </dl>
   <p>
-    The <strong>buzzcocks</strong> wordmark is Compacta Bold — a very condensed
-    display face sold as Letraset dry-transfer sheets, the kind you burnished
-    down letter by letter with a biro. Garrett modified it, overlapping the two
-    Z's into a single diagonal mass so the word reads as one object rather than
-    nine letters. That overlap is the logo; everything else about it is off the
-    shelf.
+    The <strong>buzzcocks</strong> wordmark is Garrett's, made in 1977 for the
+    <em>Orgasm Addict</em> single. It is Compacta Regular Italic, sold as Letraset
+    dry-transfer sheets — the kind you burnished down letter by letter with a biro.
+    He took the largest size he could find, rubbed the letters down, photographed
+    them, printed them onto bromide paper, sliced them down the middle, stuck them
+    to board and inked the gap closed with a Rotring pen, because the spacing
+    around the Zs was not quite right. That overlap is the logo. Everything else
+    about it is off the shelf.
   </p>
   <p>
     <strong>Eurostile</strong> and <strong>Univers</strong> carry the smaller
@@ -240,7 +242,13 @@ export const ABOUT_HTML = `
   </p>
 
   <p class="note">
-    Derivation, measurements and method are recorded in <code>ANALYSIS.md</code>.
+    Every measurement, and how it was arrived at, is written up in
+    <a href="https://github.com/jefdiesel/whatdoiget/blob/main/ANALYSIS.md"
+       target="_blank" rel="noopener">ANALYSIS.md</a> — including the nine tiles
+    that could not be identified and are not claimed. The
+    <a href="https://github.com/jefdiesel/whatdoiget" target="_blank"
+       rel="noopener">source</a> is public: the generator, the contract, and the
+    test that holds them to each other.
     This is an unofficial project, not affiliated with or endorsed by Buzzcocks,
     Malcolm Garrett, or United Artists.
   </p>
