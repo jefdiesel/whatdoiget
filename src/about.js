@@ -39,8 +39,7 @@ export const ABOUT_HTML = `
       <b>The source.</b> Promotional poster for <em>What Do I Get?</em>, United
       Artists UP 36348, February 1978. Designed by Malcolm Garrett. Reproduced
       here to show what this collection was measured from — it is the subject of
-      the work, not part of it. Every number on this site was taken off this
-      scan.
+      the work, not part of it.
     </figcaption>
   </figure>
 
