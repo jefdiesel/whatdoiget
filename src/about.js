@@ -23,36 +23,51 @@ export const ABOUT_HTML = `
     In February 1978 United Artists papered record shops with an advert for a
     Buzzcocks single. Along the bottom, in Malcolm Garrett's condensed caps, it
     described the record it was selling: <em>New Product · Single Item ·
-    UP 36348</em>. A song about wanting something and not getting it, filed
-    under a catalogue number and moved as stock.
+    UP 36348</em>. A song about wanting something and not getting it, filed under
+    a catalogue number and moved as stock.
   </p>
   <p>
-    That was already a joke, and Garrett was in on it. Punk's house style in
-    1978 was the ransom note — torn paper, photocopier grain, deliberate
-    illiteracy. He went the opposite way: a modernist grid, Eurostile and
-    Univers, the corporate typefaces of annual reports and airport signage, and
-    a band name set like a company mark. He made the sleeve look like packaging.
-    Aimed at the record industry, that is a far sharper thing to say than any
-    amount of scrawl.
+    The band making that joke had a particular right to it. Thirteen months
+    earlier Buzzcocks had put out <em>Spiral Scratch</em> themselves, on their own
+    New Hormones label — recorded cheap, sleeved plain, distributed by hand. It is
+    routinely called the founding document of British independent releasing: proof
+    a band did not need a label's permission to exist on record. Then they signed
+    to United Artists. This poster is the major's advert for them. The joke about
+    the record being stock is being told from inside the warehouse, by the people
+    who had built the alternative and then walked into the machine.
+  </p>
+  <p>
+    Garrett's design carries it. Punk's house style in 1978 was the ransom note —
+    torn paper, photocopier grain, deliberate illiteracy. He went the other way: a
+    modernist grid, Eurostile and Univers, the corporate typefaces of annual
+    reports and airport signage, and a band name set like a company mark. He made
+    the sleeve look like packaging. Aimed at the record industry, that is a far
+    sharper thing to say than any amount of scrawl.
   </p>
 
-  <h2>Pointed At The Present</h2>
+  <h2>Everyone Knew</h2>
   <p>
-    This edition takes that joke and aims it at the form it now lives in. An NFT
-    is the purest available expression of art-as-commodity: a thing whose
-    entire apparatus is scarcity, provenance, floor price and rank. Restaging a
-    1978 gag about a record being <em>New Product</em> inside the most
-    speculative container the art market has produced is not incidental to the
-    piece. It is the piece.
+    This was not an accident of taste; the period was busy watching itself get
+    sold. Punk's design was Situationist from the start — Malcolm McLaren and
+    Jamie Reid came out of that lineage, and détournement, turning the culture's
+    own materials against it, is the method behind the cut-up Queen as much as
+    behind a sleeve that impersonates a corporate report. The theory arrived
+    almost immediately: Dick Hebdige's <em>Subculture: The Meaning of Style</em>
+    was published in 1979, one year after this poster, and named the process
+    directly. Incorporation, in its commodity form — the market converts a
+    subculture's signs into merchandise, and in becoming generally available they
+    freeze. Resistance turns into stock.
   </p>
   <p>
-    So the mint is blind. You pay before you know which square you get. The
-    artwork is drawn at random when the token is created; there is no preview,
-    because a preview would let you choose, and choosing would let you off. You
-    buy the question. Everything else — the cut, the eight orientations, the six
-    words, the rarity ranks that this very page invites you to sort by — is the
-    apparatus that makes it land. The rarity table is part of the joke, not an
-    exception to it.
+    Others reached the same conclusion at the same moment. Five months after this
+    poster, Public Image Ltd incorporated as a limited company, issued their debut
+    single in a folded mock-tabloid sleeve aping <em>The Sun</em>, packaged their
+    first album as a glossy magazine, and gave themselves a logo shaped like an
+    aspirin — the lower-case <em>i</em> sitting in the groove where the pill snaps.
+    Their second album came in a film canister. There is no documented link between
+    Garrett's work and theirs; different cities, different designers. That is the
+    point. Two teams independently decided that the sharpest available comment on
+    the record industry in 1978 was to make the record look like ordinary stock.
   </p>
 
   <h2>Reference, Not Reproduction</h2>
