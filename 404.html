@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Do I Get, 1978 — 404</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+  /* style.css centres main as a flex column; here that is what we want, but the
+     art and the message sit side by side until the window gets narrow. */
+  main.lost {
+    min-height: 100vh; justify-content: center;
+    flex-direction: row; align-items: center; flex-wrap: wrap;
+    gap: clamp(24px, 4vw, 56px); padding: 40px 22px;
+  }
+  #art { flex: 0 1 auto; }
+  #art svg {
+    width: min(46vh, 42vw, 420px); min-width: 220px; height: auto; display: block;
+    box-shadow: 0 20px 60px rgba(22,32,43,.28);
+  }
+  .say { flex: 0 1 340px; min-width: 260px; }
+  .say h1 {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: clamp(64px, 12vw, 116px); line-height: .84; margin: -.06em 0 14px;
+    transform: skewX(-9deg); color: var(--spot);
+  }
+  .say p {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 26px; line-height: 1.05; margin: 0 0 22px; transform: skewX(-9deg);
+  }
+  .say .home {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 22px; text-transform: uppercase; letter-spacing: .04em;
+    background: var(--ink); color: var(--paper); text-decoration: none;
+    padding: 7px 15px 9px; display: inline-block;
+  }
+  .say .home span { display: inline-block; transform: skewX(-9deg); }
+  .say .home:hover { background: var(--spot); color: #fff; }
+  .say .cap { display: block; font-size: 11px; opacity: .5; margin-top: 20px;
+              font-family: 'Arial Narrow', Helvetica, sans-serif; letter-spacing: .06em; }
+  @media (max-width: 620px) {
+    main.lost { flex-direction: column; }
+    #art svg { width: min(78vw, 360px); }
+  }
+</style>
+</head>
+<body>
+
+<main class="lost">
+  <div id="art"></div>
+  <div class="say">
+    <h1>404</h1>
+    <p>No page here.</p>
+    <a class="home" href="./index.html"><span>Home</span></a>
+    <span class="cap" id="cap"></span>
+  </div>
+</main>
+
+<script type="module">
+  import { enumerateEdition, renderItem, traitsOf } from './src/item.js';
+  import { POSTER_STATES } from './src/provenance.js';
+
+  // A different one every time the page is hit. Nothing is minted or claimed by
+  // showing it - this is the catalogue, same as the poster views.
+  const EDITION = enumerateEdition('UP36348', { posterFirst: POSTER_STATES });
+  const item = EDITION[Math.floor(Math.random() * EDITION.length)];
+  document.getElementById('art').innerHTML = renderItem(item);
+
+  const t = traitsOf(item);
+  document.getElementById('cap').textContent =
+    `Item #${item.id} · ${t.Plate} · ${t.Word} · ${t.Rotation}${t.Mirror === 'Mirrored' ? ' mirrored' : ''}`;
+</script>
+</body>
+</html>
