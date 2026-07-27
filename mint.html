@@ -43,12 +43,32 @@
   #minted { margin-top: 28px; border-top: 3px solid var(--ink); padding-top: 16px; }
   #minted h3 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif;
                font-size: 22px; margin: 0 0 10px; transform: skewX(-9deg); }
-  .got { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 12px; }
-  .got figure { margin: 0; }
-  .got svg { width: 100%; height: auto; display: block; outline: 1px solid rgba(22,32,43,.2); }
+  .got { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 1px;
+         background: var(--ink); }
+  .got figure { margin: 0; cursor: pointer; }
+  .got figure:hover svg { outline: 3px solid var(--spot); outline-offset: -3px; }
+  .got svg { width: 100%; height: auto; display: block; }
   .got figcaption { display: flex; gap: 8px; font-size: 10px; padding-top: 4px; }
   .got figcaption span { opacity: .6; }
   #minted a { color: var(--spot); }
+  #overlay { position: fixed; inset: 0; background: rgba(236,228,212,.97); z-index: 20;
+              display: none; overflow-y: auto; }
+  #overlay.on { display: block; }
+  #overlay .inner { min-height: 100%; box-sizing: border-box; display: flex;
+                    align-items: flex-start; justify-content: center; flex-wrap: wrap;
+                    gap: clamp(20px,3vw,44px); padding: clamp(18px,3vw,40px); }
+  #overlay svg { width: min(58vh, 46vw, 520px); min-width: 220px; height: auto; display: block;
+                 box-shadow: 0 20px 60px rgba(22,32,43,.28); }
+  #meta { min-width: 260px; flex: 0 1 330px; }
+  #meta h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif; font-size: 30px;
+             margin: -.16em 0 12px; transform: skewX(-9deg); }
+  #meta dl { margin: 0; border-top: 2px solid var(--ink); }
+  #meta .row { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0;
+               border-bottom: 1px solid rgba(22,32,43,.22); }
+  #meta dt { opacity: .6; } #meta dd { margin: 0; font-weight: bold; }
+  #meta dd.prov { color: var(--spot); }
+  #meta dd a { color: var(--spot); }
+  #detail-close { margin-top: 16px; }
 </style>
 </head>
 <body data-contract="0x98A9315e81d1afFEAFe8F931DCDcC9A3fb83736c" data-network="sepolia">
@@ -63,6 +83,18 @@
   <div id="error"></div>
   <div id="minted" hidden></div>
 </main>
+
+<div id="overlay">
+  <div class="inner">
+    <div id="art"></div>
+    <div id="meta">
+      <h2 id="title"></h2>
+      <dl id="traits"></dl>
+      <button id="detail-close" class="ghost">Close</button>
+    </div>
+  </div>
+</div>
+
 
 <footer>
   <span class="mark">What Do I Get, 1978</span>

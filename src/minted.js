@@ -73,22 +73,54 @@ function render(shuffle = false) {
     ? `${minted.length} minted of 180`
     : 'Nothing minted yet.';
 
-  el('grid').innerHTML = list.map(({ tokenId, artwork, owner, tx }) => {
+  el('grid').innerHTML = list.map(({ tokenId, artwork }, i) => {
     const item = EDITION[artwork - 1];
     const t = traitsOf(item);
     const prov = rankById.get(artwork) <= 36;
-    return `<figure>${renderItem(item)}<figcaption>`
-      + `<b>#${tokenId}</b>`
-      + `<span>${t.Word}</span>`
+    return `<figure data-i="${i}">${renderItem(item)}<figcaption>`
+      + `<b>#${tokenId}</b><span>${t.Word}</span>`
       + (prov ? '<i class="prov">1978</i>' : '')
-      + `</figcaption>`
-      + `<div class="links">`
-      + `<a target="_blank" rel="noopener" href="${explorer}/nft/${CONTRACT}/${tokenId}">token</a>`
-      + `<a target="_blank" rel="noopener" href="${explorer}/tx/${tx}">tx</a>`
-      + `<a target="_blank" rel="noopener" href="${explorer}/address/${owner}">${owner.slice(0, 6)}…</a>`
-      + `</div></figure>`;
+      + `</figcaption></figure>`;
   }).join('');
+
+  for (const fig of el('grid').querySelectorAll('figure')) {
+    fig.onclick = () => openDetail(list[Number(fig.dataset.i)]);
+  }
 }
+
+/// Item detail: traits, owner, and the transaction it came from.
+function openDetail({ tokenId, artwork, owner, tx }) {
+  const item = EDITION[artwork - 1];
+  el('art').innerHTML = renderItem(item);
+  el('title').textContent = 'What Do I Get, 1978';
+
+  const rank = rankById.get(artwork);
+  const rows = [
+    ['Item', `#${tokenId}`],
+    ['Rarity rank', `${rank} of 180`],
+    ...Object.entries(traitsOf(item)),
+  ];
+  let html = rows.map(([k, v]) => `<div class="row"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  if (rank <= 36) {
+    html += '<div class="row"><dt>Provenance</dt>'
+      + '<dd class="prov">Malcolm Garrett 1978</dd></div>';
+  }
+  html += `<div class="row"><dt>Transaction</dt><dd><a target="_blank" rel="noopener" `
+    + `href="${explorer}/tx/${tx}">${tx.slice(0, 10)}…${tx.slice(-6)}</a></dd></div>`;
+  html += `<div class="row"><dt>Owner</dt><dd><a target="_blank" rel="noopener" `
+    + `href="${explorer}/address/${owner}">${owner.slice(0, 8)}…${owner.slice(-4)}</a></dd></div>`;
+  html += `<div class="row"><dt>Token</dt><dd><a target="_blank" rel="noopener" `
+    + `href="${explorer}/nft/${CONTRACT}/${tokenId}">Etherscan</a></dd></div>`;
+  el('traits').innerHTML = html;
+  el('overlay').classList.add('on');
+}
+
+const closeDetail = () => el('overlay').classList.remove('on');
+el('detail-close').onclick = closeDetail;
+el('overlay').addEventListener('click', (e) => {
+  if (e.target === el('overlay') || e.target.classList.contains('inner')) closeDetail();
+});
+addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDetail(); });
 
 function shuffled(arr) {
   const a = arr.slice();

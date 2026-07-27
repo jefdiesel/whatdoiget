@@ -11,15 +11,32 @@
   .bar h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif;
             font-size: 26px; margin: 0; transform: skewX(-9deg); }
   #count { opacity: .55; flex: 1; }
-  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 14px; }
-  #grid figure { margin: 0; }
-  #grid svg { width: 100%; height: auto; display: block; outline: 1px solid rgba(22,32,43,.2); }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 1px;
+          background: var(--ink); }
+  #grid figure { margin: 0; cursor: pointer; }
+  #grid figure:hover svg { outline: 3px solid var(--spot); outline-offset: -3px; }
+  #grid svg { width: 100%; height: auto; display: block; }
   #grid figcaption { display: flex; gap: 7px; align-items: baseline; font-size: 10px; padding-top: 4px; }
   #grid figcaption span { opacity: .6; }
   #grid figcaption .prov { font-style: normal; color: var(--spot); font-weight: bold; margin-left: auto; }
-  .links { display: flex; gap: 8px; font-size: 9px; padding-top: 2px; opacity: .55; }
-  .links a { color: var(--ink); text-decoration: none; border-bottom: 1px solid currentColor; }
-  .links a:hover { color: var(--spot); }
+  #overlay { position: fixed; inset: 0; background: rgba(236,228,212,.97); z-index: 20;
+             display: none; overflow-y: auto; }
+  #overlay.on { display: block; }
+  #overlay .inner { min-height: 100%; box-sizing: border-box; display: flex;
+                    align-items: flex-start; justify-content: center; flex-wrap: wrap;
+                    gap: clamp(20px,3vw,44px); padding: clamp(18px,3vw,40px); }
+  #overlay svg { width: min(58vh, 46vw, 520px); min-width: 220px; height: auto; display: block;
+                 box-shadow: 0 20px 60px rgba(22,32,43,.28); }
+  #meta { min-width: 260px; flex: 0 1 330px; }
+  #meta h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif; font-size: 30px;
+             margin: -.16em 0 12px; transform: skewX(-9deg); }
+  #meta dl { margin: 0; border-top: 2px solid var(--ink); }
+  #meta .row { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0;
+               border-bottom: 1px solid rgba(22,32,43,.22); }
+  #meta dt { opacity: .6; } #meta dd { margin: 0; font-weight: bold; }
+  #meta dd.prov { color: var(--spot); }
+  #meta dd a { color: var(--spot); }
+  #detail-close { margin-top: 16px; }
   .note { text-transform: none; letter-spacing: 0; font-family: Helvetica, Arial, sans-serif;
           font-size: 13px; opacity: .7; }
   footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
@@ -45,6 +62,17 @@
   </div>
   <div id="grid"></div>
 </main>
+
+<div id="overlay">
+  <div class="inner">
+    <div id="art"></div>
+    <div id="meta">
+      <h2 id="title"></h2>
+      <dl id="traits"></dl>
+      <button id="detail-close" class="ghost">Close</button>
+    </div>
+  </div>
+</div>
 
 <footer>
   <span class="mark">What Do I Get, 1978</span>

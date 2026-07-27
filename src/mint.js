@@ -205,7 +205,7 @@ async function doMint(data, value) {
   }
 
   el('error').textContent = '';
-  showMinted(readMintedLogs(receipt), hash);
+  showMinted(readMintedLogs(receipt).map((m) => ({ ...m, tx: hash })));
   await refresh();
 }
 
@@ -232,27 +232,50 @@ function readMintedLogs(receipt) {
     }));
 }
 
-/// What you actually drew.
-function showMinted(minted, hash) {
+/// What you actually drew. Borderless, click through for the detail.
+let lastMinted = [];
+
+function showMinted(minted) {
+  lastMinted = minted;
   const box = el('minted');
   if (!minted.length) { box.hidden = true; return; }
   box.hidden = false;
 
   box.innerHTML = `<h3>${minted.length === 1 ? 'You minted' : `You minted ${minted.length}`}</h3>`
-    + `<div class="got">` + minted.map(({ tokenId, artwork }) => {
-      const item = EDITION[artwork - 1];
-      const t = traitsOf(item);
-      return `<figure>${renderItem(item)}<figcaption>`
-        + `<b>#${tokenId}</b> <span>${t.Word} · ${t.Plate}</span>`
-        + `</figcaption></figure>`;
-    }).join('') + `</div>`
-    + `<p class="note"><a target="_blank" rel="noopener" href="${explorer()}/tx/${hash}">`
-    + `Transaction ${short(hash)}</a> · `
-    + minted.map(({ tokenId }) =>
-        `<a target="_blank" rel="noopener" href="${explorer()}/nft/${CONTRACT}/${tokenId}">#${tokenId}</a>`
-      ).join(' · ')
-    + `</p>`;
+    + `<div class="got">` + minted.map(({ tokenId, artwork }, i) => {
+      const t = traitsOf(EDITION[artwork - 1]);
+      return `<figure data-i="${i}">${renderItem(EDITION[artwork - 1])}<figcaption>`
+        + `<b>#${tokenId}</b> <span>${t.Word}</span></figcaption></figure>`;
+    }).join('') + `</div>`;
+
+  for (const fig of box.querySelectorAll('.got figure')) {
+    fig.onclick = () => openDetail(minted[Number(fig.dataset.i)]);
+  }
 }
+
+/// Item detail: the traits, and the transaction it came from.
+function openDetail({ tokenId, artwork, tx }) {
+  const item = EDITION[artwork - 1];
+  el('art').innerHTML = renderItem(item);
+  el('title').textContent = 'What Do I Get, 1978';
+
+  const rows = [['Item', `#${tokenId}`], ...Object.entries(traitsOf(item))];
+  let html = rows.map(([k, v]) =>
+    `<div class="row"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  html += `<div class="row"><dt>Transaction</dt><dd><a target="_blank" rel="noopener" `
+    + `href="${explorer()}/tx/${tx}">${short(tx)}</a></dd></div>`;
+  html += `<div class="row"><dt>Token</dt><dd><a target="_blank" rel="noopener" `
+    + `href="${explorer()}/nft/${CONTRACT}/${tokenId}">view on Etherscan</a></dd></div>`;
+  el('traits').innerHTML = html;
+  el('overlay').classList.add('on');
+}
+
+const closeDetail = () => el('overlay').classList.remove('on');
+el('detail-close').onclick = closeDetail;
+el('overlay').addEventListener('click', (e) => {
+  if (e.target === el('overlay') || e.target.classList.contains('inner')) closeDetail();
+});
+addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDetail(); });
 
 // --- wiring -----------------------------------------------------------------
 
