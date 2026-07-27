@@ -23,8 +23,8 @@ export const SPOT = '#e2482b';
 
 // --- type -----------------------------------------------------------------
 // Type is Eurostile Bold Condensed Oblique - the corporate grotesque Garrett
-// set this release in - with the BUZZCOCKS wordmark (Compacta Bold, modified
-// overlapping double Z) as artwork. Both are stored as outlines, so an item
+// set this release in - with the BUZZCOCKS wordmark (Compacta Regular Italic,
+// nested double Z) as artwork. Both are stored as outlines, so an item
 // needs no font file to render and looks identical everywhere.
 import { GLYPHS } from './glyphs.js';
 

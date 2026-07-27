@@ -221,8 +221,32 @@ pair), then the type's position to break the tie.
 | distinct states among them | **36** |
 | shape agreement | median 0.975, min 0.922 |
 
-Those 36 items carry the trait `Provenance: Malcolm Garrett 1978`. The remaining
-9 tiles could not be pinned down at 162px and are not claimed.
+Those 36 items carry the trait `Provenance: Malcolm Garrett 1978`.
+
+### The nine that were not identified
+
+| tile | word | cut match | type offset |
+|---|---|---|---|
+| (0,3) | DO | 0.966 | 0.860 |
+| (0,4) | I | 0.985 | 0.306 |
+| (3,1) | I | 0.945 | 0.923 |
+| (3,5) | DO | 0.995 | 0.684 |
+| (4,0) | DO | 0.926 | 0.891 |
+| (4,1) | WHAT | 0.960 | 1.000 |
+| (5,3) | I | 0.973 | 0.913 |
+| (6,2) | DO | 0.966 | 0.945 |
+| (7,1) | WHAT | 0.993 | 0.204 |
+
+Every one matches the cut almost perfectly — IoU 0.926 to 0.995. What fails is
+the type: how far it sits from where the model would place it, against a
+threshold of 0.12.
+
+And they are all `DO`, `I` and `WHAT` — the three shortest words. An `I` is a
+single narrow bar; at 162px that is a handful of dark pixels, and on a creased
+or foxed tile the detector grabs damage instead of a letter. So the poster is
+fully readable as geometry and only mostly readable as type. These nine are
+refused rather than guessed, which is the only thing that makes the other 36
+worth stating.
 
 ## On chain
 

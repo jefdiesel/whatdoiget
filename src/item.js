@@ -244,8 +244,8 @@ export function enumerateEdition(seed = 'UP36348', opts = {}) {
 const SIZE = 1000;
 const n = (v) => (Math.round(v * 100) / 100).toString();
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-// The source is set in a heavy condensed oblique grotesque - Compacta Bold
-// Italic or similar. Impact is the closest thing present on both macOS and
+// The source is set in a heavy condensed oblique grotesque - Compacta Regular
+// Italic. Impact is the closest thing present on both macOS and
 // Windows; the obliquing is done with skewX, as the original's was.
 // NOTE: this stack must be replaced with embedded glyph outlines before mint -
 // see README. A font that is merely *referenced* will render differently on

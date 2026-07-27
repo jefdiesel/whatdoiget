@@ -4,7 +4,8 @@ pragma solidity 0.8.28;
 /// @title Glyphs
 /// @notice The six words of the lexicon as SVG outlines, held in their own
 ///         contract so the minter stays under the EIP-170 code-size limit.
-///         BUZZCOCKS is the band's wordmark (Compacta Bold, modified double Z);
+///         BUZZCOCKS is the band's wordmark (Compacta Regular Italic, cut and
+///         re-spaced by Malcolm Garrett in 1977 to nest the two Zs);
 ///         the rest are Eurostile Bold Condensed Oblique. Generated from
 ///         src/glyphs.js by script/GenerateData.mjs - do not edit by hand.
 contract Glyphs {
