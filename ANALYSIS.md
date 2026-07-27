@@ -217,36 +217,41 @@ pair), then the type's position to break the tie.
 
 | | |
 |---|---|
-| confidently identified | **54 of 63** tiles |
-| distinct states among them | **36** |
+| identified | **63 of 63** tiles — 54 measured, 9 read from the image |
+| distinct states | **42** |
 | shape agreement | median 0.975, min 0.922 |
 
 Those 36 items carry the trait `Provenance: Malcolm Garrett 1978`.
 
-### The nine that were not identified
+### The nine the type-locator could not settle
 
-| tile | word | cut match | type offset |
-|---|---|---|---|
-| (0,3) | DO | 0.966 | 0.860 |
-| (0,4) | I | 0.985 | 0.306 |
-| (3,1) | I | 0.945 | 0.923 |
-| (3,5) | DO | 0.995 | 0.684 |
-| (4,0) | DO | 0.926 | 0.891 |
-| (4,1) | WHAT | 0.960 | 1.000 |
-| (5,3) | I | 0.973 | 0.913 |
-| (6,2) | DO | 0.966 | 0.945 |
-| (7,1) | WHAT | 0.993 | 0.204 |
+Every one matched its cut at IoU 0.926–0.995, so the orientation was never in
+doubt. What failed was isolating a two-letter word from crease and paper grain
+at 162px: `DO` and `I` are a handful of dark pixels, and four successive
+detectors kept grabbing damage instead.
 
-Every one matches the cut almost perfectly — IoU 0.926 to 0.995. What fails is
-the type: how far it sits from where the model would place it, against a
-threshold of 0.12.
+They were settled by looking. Each tile was contrast-stretched and all three
+candidate plane boxes drawn over it. The word falls inside plane B in all nine,
+and the box also fixes the rotation, since the 180° twin puts it in the opposite
+corner where there is nothing.
 
-And they are all `DO`, `I` and `WHAT` — the three shortest words. An `I` is a
-single narrow bar; at 162px that is a handful of dark pixels, and on a creased
-or foxed tile the detector grabs damage instead of a letter. So the poster is
-fully readable as geometry and only mostly readable as type. These nine are
-refused rather than guessed, which is the only thing that makes the other 36
-worth stating.
+| tile | word | tile | word | tile | word |
+|---|---|---|---|---|---|
+| (0,3) | DO | (3,5) | DO | (5,3) | I |
+| (0,4) | I | (4,0) | DO | (6,2) | DO |
+| (3,1) | I | (4,1) | WHAT | (7,1) | WHAT |
+
+This is a read, not a measurement — one signal rather than the two that confirm
+the other 54 — and it is recorded that way in `scripts/provenance.mjs` so the
+basis for each is checkable against the image. A higher-resolution scan should
+settle all nine on measurement alone.
+
+### One state needed a seat
+
+The poster used red `WHAT` on plane B twice, at rot90 and rot270 mirrored. The
+plate sets issue each word-plane combination once, so only one could fit. Rather
+than drop a state Garrett printed, the red plate carries 17 instead of 16 and the
+blank blues give up a seat to hold the edition at 180.
 
 ## On chain
 

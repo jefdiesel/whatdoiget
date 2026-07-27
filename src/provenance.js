@@ -12,6 +12,7 @@ export const IN_POSTER = new Set([
  "0|true|DO|B|standard",
  "0|true|GET?|B|standard",
  "0|true|UP 36348|B|standard",
+ "0|true|WHAT|B|standard",
  "1|false|BUZZCOCKS|B|standard",
  "1|false|DO|A|standard",
  "1|false|GET?|B|standard",
@@ -29,15 +30,20 @@ export const IN_POSTER = new Set([
  "2|false|WHAT|B|standard",
  "2|true|BUZZCOCKS|B|red",
  "2|true|DO|A|standard",
+ "2|true|DO|B|red",
+ "2|true|DO|B|standard",
  "2|true|GET?|B|standard",
+ "2|true|I|B|red",
  "2|true|WHAT|B|standard",
  "3|false|DO|B|standard",
  "3|false|I|B|standard",
  "3|false|UP 36348|B|standard",
  "3|false|WHAT|B|standard",
  "3|true|BUZZCOCKS|B|standard",
+ "3|true|DO|B|standard",
  "3|true|GET?|B|standard",
  "3|true|UP 36348|B|standard",
+ "3|true|WHAT|B|red",
  "3|true|WHAT|B|standard"
 ]);
 
@@ -66,6 +72,20 @@ export const POSTER_STATES = [
   "plate": "standard"
  },
  {
+  "rot": 3,
+  "mirror": true,
+  "word": "DO",
+  "plane": "B",
+  "plate": "standard"
+ },
+ {
+  "rot": 0,
+  "mirror": false,
+  "word": "I",
+  "plane": "B",
+  "plate": "standard"
+ },
+ {
   "rot": 1,
   "mirror": false,
   "word": "BUZZCOCKS",
@@ -105,13 +125,6 @@ export const POSTER_STATES = [
   "mirror": true,
   "word": "GET?",
   "plane": "A",
-  "plate": "standard"
- },
- {
-  "rot": 0,
-  "mirror": false,
-  "word": "I",
-  "plane": "B",
   "plate": "standard"
  },
  {
@@ -171,6 +184,20 @@ export const POSTER_STATES = [
   "plate": "standard"
  },
  {
+  "rot": 2,
+  "mirror": true,
+  "word": "DO",
+  "plane": "B",
+  "plate": "standard"
+ },
+ {
+  "rot": 3,
+  "mirror": true,
+  "word": "WHAT",
+  "plane": "B",
+  "plate": "red"
+ },
+ {
   "rot": 0,
   "mirror": false,
   "word": "GET?",
@@ -204,6 +231,13 @@ export const POSTER_STATES = [
   "word": "WHAT",
   "plane": "B",
   "plate": "standard"
+ },
+ {
+  "rot": 2,
+  "mirror": true,
+  "word": "I",
+  "plane": "B",
+  "plate": "red"
  },
  {
   "rot": 1,
@@ -228,6 +262,13 @@ export const POSTER_STATES = [
  },
  {
   "rot": 2,
+  "mirror": true,
+  "word": "DO",
+  "plane": "B",
+  "plate": "red"
+ },
+ {
+  "rot": 2,
   "mirror": false,
   "word": "WHAT",
   "plane": "B",
@@ -244,6 +285,13 @@ export const POSTER_STATES = [
   "rot": 0,
   "mirror": false,
   "word": "UP 36348",
+  "plane": "B",
+  "plate": "standard"
+ },
+ {
+  "rot": 0,
+  "mirror": true,
+  "word": "WHAT",
   "plane": "B",
   "plate": "standard"
  },

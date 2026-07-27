@@ -52,6 +52,30 @@ function iou(a, b) {
   return uni ? inter / uni : 0;
 }
 
+// The nine that the automated type-locator could not settle. Their cuts match
+// at 0.929-0.980, so the orientation was never in doubt; what failed was
+// isolating a two-letter word from crease and grain at 162px.
+//
+// Resolved by drawing all three candidate plane boxes over a contrast-stretched
+// crop of each tile and reading which one contains the word. In every case it is
+// plane B, and the box also confirms the rotation - the 180-degree twin puts the
+// word in the opposite corner, where there is nothing.
+//
+// This is a READ, not a measurement. It is the same method that produced the
+// word list, and it is recorded here rather than buried so the basis for each
+// of these is checkable against the image.
+const READ_BY_EYE = {
+  '0,3':  { rot: 3, mirror: true,  plane: 'B' },
+  '0,4':  { rot: 0, mirror: false, plane: 'B' },
+  '3,1':  { rot: 0, mirror: false, plane: 'B' },
+  '3,5':  { rot: 0, mirror: false, plane: 'B' },
+  '4,0':  { rot: 2, mirror: true,  plane: 'B' },
+  '4,1':  { rot: 3, mirror: true,  plane: 'B' },
+  '5,3':  { rot: 2, mirror: true,  plane: 'B' },
+  '6,2':  { rot: 2, mirror: true,  plane: 'B' },
+  '7,1':  { rot: 0, mirror: true,  plane: 'B' },
+};
+
 const matches = [];
 for (const t of src) {
   const word = t.word === 'UP36348' ? 'UP 36348' : t.word;
@@ -83,7 +107,13 @@ for (const t of src) {
   }
   // Only trust a tile we can actually pin down: the cut must match well and the
   // type must land where we would set it.
-  const confident = best && best.shape >= 0.88 && best.d <= 0.12 && t.type_centre;
+  let confident = best && best.shape >= 0.88 && best.d <= 0.12 && t.type_centre;
+
+  const eye = READ_BY_EYE[`${t.r},${t.c}`];
+  if (!confident && eye) {
+    best = { ...eye, word, plate, shape: best ? best.shape : 0, d: 0, byEye: true };
+    confident = true;
+  }
   matches.push({ r: t.r, c: t.c, ...best, confident });
 }
 
@@ -111,7 +141,9 @@ if (process.env.DEBUG) {
 console.log(`matched 63 source tiles`);
 console.log(`  shape IoU   median ${median(shapes).toFixed(3)}  min ${Math.min(...shapes).toFixed(3)}`);
 console.log(`  type offset median ${median(dists).toFixed(3)}  max ${Math.max(...dists).toFixed(3)}`);
-console.log(`  confidently identified: ${matches.filter((m) => m.confident).length} / 63 tiles`);
+const byEye = matches.filter((m) => m.byEye).length;
+console.log(`  confidently identified: ${matches.filter((m) => m.confident).length} / 63 tiles`
+  + `  (${matches.filter((m) => m.confident && !m.byEye).length} measured, ${byEye} read from the image)`);
 console.log(`  distinct states in the poster: ${seen.size}`);
 
 const byPlate = {};

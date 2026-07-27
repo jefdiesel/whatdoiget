@@ -212,8 +212,25 @@ export function enumerateEdition(seed = 'UP36348', opts = {}) {
   rng.shuffle(combos).slice(0, 8).forEach((wp, i) =>
     items.push({ ...orients[i], ...wp, plate: 'redinv' }));
 
-  // 4. blank blue: every orientation, no type. A complete set of 8.
-  for (const o of orients) items.push({ ...o, word: null, plane: null, plate: 'standard' });
+  // Any poster state still unplaced gets a seat. The plate sets issue each
+  // word-plane combo once, so when the poster used the same combo twice at
+  // different rotations - red WHAT on plane B, at rot90 and rot270M - only one
+  // fits. Provenance is worth more than the tidiness of the set, so the extras
+  // are appended and the blank blues give up a seat each to hold 180.
+  const key = (x) => `${x.rot}|${x.mirror}|${x.word}|${x.plane}|${x.plate}`;
+  const placed = new Set(items.map(key));
+  let extras = 0;
+  for (const p of posterFirst) {
+    if (p.word === null || placed.has(key(p))) continue;
+    items.push({ rot: p.rot, mirror: p.mirror, word: p.word, plane: p.plane, plate: p.plate });
+    placed.add(key(p));
+    extras++;
+  }
+
+  // 4. blank blue: one per orientation, less whatever the extras took.
+  for (const o of orients.slice(0, orients.length - extras)) {
+    items.push({ ...o, word: null, plane: null, plate: 'standard' });
+  }
 
   // 5. blank red: 4 of the 8 possible, drawn at random (deterministically).
   for (const o of rng.shuffle(orients).slice(0, 4)) {
