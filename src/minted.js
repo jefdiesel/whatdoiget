@@ -67,20 +67,34 @@ async function load() {
   render();
 }
 
+/// Lay the minted items out as a near-square block: 3 across at three, 2x2 at
+/// four, 3x2 at six, 3x3 at nine, and so on. Columns are ceil(sqrt(n)), capped
+/// by what actually fits the viewport so it keeps working at 180.
+function layout(n) {
+  const TILE = 210;                       // a comfortable tile at full size
+  const fits = Math.max(1, Math.floor((Math.min(innerWidth, 1300) - 44) / 140));
+  // up to three sit in a single row; past that, go near-square
+  const want = n <= 3 ? n : Math.ceil(Math.sqrt(n));
+  const cols = Math.max(1, Math.min(want, fits));
+  const grid = el('grid');
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.style.width = `min(calc(100vw - 44px), ${cols * TILE}px)`;
+}
+
 function render(shuffle = false) {
   const list = shuffle ? shuffled(minted) : minted;
   el('count').textContent = minted.length
     ? `${minted.length} minted of 180`
     : 'Nothing minted yet.';
+  layout(list.length);
 
+  // No captions in the block: they would sit between the rows and break it.
+  // The number rides on the tile, and clicking gives the full detail.
   el('grid').innerHTML = list.map(({ tokenId, artwork }, i) => {
-    const item = EDITION[artwork - 1];
-    const t = traitsOf(item);
     const prov = rankById.get(artwork) <= 36;
-    return `<figure data-i="${i}">${renderItem(item)}<figcaption>`
-      + `<b>#${tokenId}</b><span>${t.Word}</span>`
-      + (prov ? '<i class="prov">1978</i>' : '')
-      + `</figcaption></figure>`;
+    return `<figure data-i="${i}" title="#${tokenId}">`
+      + renderItem(EDITION[artwork - 1])
+      + `<b class="tag${prov ? ' prov' : ''}">#${tokenId}</b></figure>`;
   }).join('');
 
   for (const fig of el('grid').querySelectorAll('figure')) {
@@ -131,6 +145,7 @@ function shuffled(arr) {
   return a;
 }
 
+addEventListener('resize', () => layout(minted.length));
 el('shuffle').onclick = () => render(true);
 el('reload').onclick = load;
 load();
