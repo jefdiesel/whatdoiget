@@ -16,6 +16,70 @@ export const ABOUT_HTML = `
 
   <p class="kicker">Buzzcocks · United Artists UP 36348 · February 1978</p>
 
+  <p class="kicker">Statement</p>
+
+  <h2>The Joke Is The Product</h2>
+  <p>
+    In February 1978 United Artists papered record shops with an advert for a
+    Buzzcocks single. Along the bottom, in Malcolm Garrett's condensed caps, it
+    described the record it was selling: <em>New Product · Single Item ·
+    UP 36348</em>. A song about wanting something and not getting it, filed
+    under a catalogue number and moved as stock.
+  </p>
+  <p>
+    That was already a joke, and Garrett was in on it. Punk's house style in
+    1978 was the ransom note — torn paper, photocopier grain, deliberate
+    illiteracy. He went the opposite way: a modernist grid, Eurostile and
+    Univers, the corporate typefaces of annual reports and airport signage, and
+    a band name set like a company mark. He made the sleeve look like packaging.
+    Aimed at the record industry, that is a far sharper thing to say than any
+    amount of scrawl.
+  </p>
+
+  <h2>Pointed At The Present</h2>
+  <p>
+    This edition takes that joke and aims it at the form it now lives in. An NFT
+    is the purest available expression of art-as-commodity: a thing whose
+    entire apparatus is scarcity, provenance, floor price and rank. Restaging a
+    1978 gag about a record being <em>New Product</em> inside the most
+    speculative container the art market has produced is not incidental to the
+    piece. It is the piece.
+  </p>
+  <p>
+    So the mint is blind. You pay before you know which square you get. The
+    artwork is drawn at random when the token is created; there is no preview,
+    because a preview would let you choose, and choosing would let you off. You
+    buy the question. Everything else — the cut, the eight orientations, the six
+    words, the rarity ranks that this very page invites you to sort by — is the
+    apparatus that makes it land. The rarity table is part of the joke, not an
+    exception to it.
+  </p>
+
+  <h2>Reference, Not Reproduction</h2>
+  <p>
+    This is a design study before it is anything else. The poster was not copied;
+    it was taken apart. Measuring it revealed that the whole field is <em>one</em>
+    hand-cut square, photocopied and pasted down in eight orientations — every
+    arrow and chevron across it is emergent, produced by how neighbours happen to
+    line up. No tile contains one. That finding is the work.
+  </p>
+  <p>
+    So nothing here was invented to look right. The cut runs at 21.4°, fitted
+    across 61 of the poster's 63 tiles. Ink covers 54.6%. Type sits at a cap
+    height of 0.070 with a 0.037 inset. Even the rarity is measured rather than
+    assigned: the white region has three edges type can align to, the shortest is
+    too short for the longest words, and the 3:2 ratio falls out of the geometry
+    without anyone choosing it. The 36 items that reproduce a state Garrett
+    actually printed carry his name.
+  </p>
+  <p>
+    What is reproduced is a method, not an image — and the reconstruction is
+    offered as commentary on how that method worked and on what the object was
+    already saying about itself.
+  </p>
+
+  <hr>
+
   <h2>The Record</h2>
   <p>
     <em>What Do I Get?</em> was released as a single in February 1978 on United
@@ -106,31 +170,14 @@ export const ABOUT_HTML = `
     signage was the point.
   </p>
 
-  <hr>
-
-  <h2>This Collection</h2>
+  <h2>Credit</h2>
   <p>
-    180 items, each one square of the promo poster. Every parameter is
-    measured from the source rather than invented: the cut runs at 21.4°, fitted
-    across 61 of the poster's 63 tiles; the ink covers 54.6% of the square; the
-    type sits at a cap height of 0.070 with a 0.037 inset.
-  </p>
-  <p>
-    The poster is one hand-cut square, photocopied and pasted down in eight
-    orientations — four rotations and their mirrors. Every arrow and chevron you
-    see across it is emergent, produced by how neighbouring tiles line up. No
-    tile contains one.
-  </p>
-  <p>
-    Rarity is structural, not assigned. The white region has three edges type can
-    align to, and the shortest is too short for <em>BUZZCOCKS</em> and
-    <em>UP 36348</em> — so the long words have two placements where the short
-    ones have three, and the collection carries that 3:2 ratio without anyone
-    choosing it.
-  </p>
-  <p>
-    35 items reproduce a state that appears in the 1978 poster itself. They carry
-    the trait <strong>Malcolm Garrett 1978</strong>.
+    The record is by Buzzcocks — Pete Shelley, Steve Diggle, Steve Garvey, John
+    Maher — released by United Artists as UP 36348. The poster, the wordmark and
+    the visual system are Malcolm Garrett's. This edition is unofficial: an
+    homage and a reading, made by someone who took the artwork apart to
+    understand how it worked, and not affiliated with or endorsed by any of
+    them.
   </p>
 
   <p class="note">
