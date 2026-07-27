@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Do I Get, 1978 — About</title>
+<meta name="description" content="A generative edition of 180 measured from Malcolm Garrett's 1978 promotional poster for the Buzzcocks single What Do I Get? (United Artists UP 36348).">
+<link rel="stylesheet" href="./style.css">
+<style>
+  /* style.css centres main as a flex column, which shrink-wraps every child.
+     This is a document, so lay it out as one. */
+  main.about { display: block; padding: 46px 22px 110px; }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
+           border-top: 3px solid var(--ink); display: flex; align-items: center;
+           gap: .3em; padding: 8px 16px; font-size: 20px;
+           font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+           text-transform: uppercase; line-height: 1; }
+  footer > * { transform: skewX(-9deg); }
+  footer .mark { font-weight: 700; }
+  footer a { color: var(--ink); text-decoration: none; }
+  footer a:hover { color: var(--spot); }
+  footer .dot { opacity: .5; }
+</style>
+</head>
+<body>
+
+<main class="about">
+  <div class="prose" id="about-body"></div>
+</main>
+
+<footer>
+  <span class="mark">What Do I Get, 1978</span>
+  <span class="dot">·</span>
+  <a href="./index.html">7:9</a>
+  <span class="dot">·</span>
+  <a href="./all.html">12:15</a>
+  <span class="dot">·</span>
+  <a href="./traits.html">Traits</a>
+</footer>
+
+<script type="module">
+  import { ABOUT_HTML } from './src/about.js';
+  document.getElementById('about-body').innerHTML = ABOUT_HTML;
+</script>
+</body>
+</html>
