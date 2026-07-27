@@ -78,6 +78,50 @@ export const ABOUT_HTML = `
     already saying about itself.
   </p>
 
+  <h2>How It Was Read</h2>
+  <p>
+    The poster was analysed with Claude Opus 5. Not to generate anything — every
+    mark in this edition traces back to a measurement — but to read a 1,125-pixel
+    scan closely enough to recover the system underneath it. Pixels were sorted
+    into three plates by hue and luminance; the grid pitch was found by scoring
+    candidate lattices against colour-transition energy, which put it at 161.5px
+    on both axes and so established the tiles were square: 7 across, 9 down, 63
+    in all.
+  </p>
+  <p>
+    Then every tile was matched against every other under the eight symmetries of
+    a square. They collapsed onto a single master cut at a median agreement of
+    0.97, minimum 0.93, across all 63 — which is the finding the whole edition
+    rests on. Fitting a line to each tile's ink boundary gave the angle:
+    <b>21.4°</b>, or |dx/dy| = 0.3926 ± 0.0111 over 61 tiles. Measuring the cut
+    angle across the field returned four distinct clusters rather than two, which
+    is only possible with a reflection — that is how mirroring was proved rather
+    than assumed.
+  </p>
+  <p>
+    The reading also found what the artist did not intend to be found. The 63
+    tiles collapse to only <b>40 distinct states</b>: 23 collisions, one
+    arrangement repeated five times. Drawing 63 times at random from a 96-state
+    bag predicts about 46 distinct, so the poster is not a designed sequence at
+    all — it is a shuffle, pasted down as it came. That is why this edition is
+    minted blind. The mechanic was read out of the artefact, not invented for it.
+  </p>
+  <p>
+    It was a conversation, and the corrections mattered more than the
+    computation. The first attempt generated a fresh random cut per tile and
+    produced confetti — it took a human eye to say the angles all look identical.
+    Mirroring was dismissed before it was proved. The claim that every tile
+    carries exactly one word came from looking, and only then survived testing at
+    63 of 63. Left alone, the analysis would have been confidently wrong in at
+    least three places.
+  </p>
+  <p>
+    Everything is checkable. The contract renders all 180 items on chain, and a
+    test compares each one byte-for-byte against the renderer this site uses —
+    not a sample, not a hash. The derivation of every constant is in
+    <code>ANALYSIS.md</code>.
+  </p>
+
   <hr>
 
   <h2>The Record</h2>
