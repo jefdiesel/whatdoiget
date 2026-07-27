@@ -6,13 +6,25 @@
 <title>What Do I Get, 1978 — Mint</title>
 <link rel="stylesheet" href="./style.css">
 <style>
-  main { max-width: 62ch; margin: 0 auto; padding: 34px 22px 120px; }
+  /* style.css centres main as a flex column, which shrink-wraps every child.
+     This page is a document, not a gallery, so lay it out as one. */
+  main.mint { display: block; max-width: 62ch; margin: 0 auto; padding: 34px 22px 120px; }
   .mint h2 {
     font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
     font-size: 30px; margin: 0 0 6px; transform: skewX(-9deg);
   }
-  .mint .kicker { letter-spacing: .1em; font-size: 11px; opacity: .55; margin: 0 0 18px; }
-  dl { margin: 0 0 20px; border-top: 2px solid var(--ink); }
+  .mint .lede {
+    text-transform: none; letter-spacing: 0; font-size: 14px; line-height: 1.6;
+    font-family: Helvetica, Arial, sans-serif; opacity: .8; margin: 0 0 22px;
+  }
+  .mint .lede a { color: var(--spot); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .mint .lede a:hover { background: var(--spot); color: #fff; }
+  .step {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 18px; margin: 0 0 10px; transform: skewX(-9deg); opacity: .75;
+  }
+  dl { margin: 0 0 24px; border-top: 3px solid var(--ink); }
+  #status a { color: var(--spot); text-decoration: none; border-bottom: 1px solid currentColor; }
   .row { display: flex; justify-content: space-between; gap: 20px; padding: 7px 0;
          border-bottom: 1px solid rgba(22,32,43,.22); }
   .row dt { opacity: .6; } .row dd { margin: 0; font-weight: bold; }
@@ -73,10 +85,14 @@
 <body data-contract="0x6d2a9dc9fe10F40a189Ba7aF2E5D193b7C97551d" data-network="sepolia">
 
 <main class="mint">
-  <p class="kicker">Buzzcocks · United Artists UP 36348 · February 1978</p>
   <h2>Mint</h2>
+  <p class="lede">An edition of 180, drawn and stored entirely on chain. The item you
+    get is picked at random the moment you mint — there is no preview and no
+    choosing, which is the whole joke. <a href="./minted.html">See what has been
+    minted</a>, or <a href="./traits.html">browse the edition</a>.</p>
 
   <div id="status"></div>
+  <h3 class="step">Connect</h3>
   <div id="wallets"></div>
   <div id="action"></div>
   <div id="error"></div>

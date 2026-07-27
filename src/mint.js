@@ -11,10 +11,14 @@ import {
 } from './wallet.js';
 import { enumerateEdition, renderItem, traitsOf } from './item.js';
 import { POSTER_STATES } from './provenance.js';
+import { buildEdition } from './rarity.js';
 
 // Indexed by artwork number: artwork N is items[N - 1]. Used only AFTER a mint,
 // to show what was actually drawn - never before, which would undo the blind.
 const EDITION = enumerateEdition('UP36348', { posterFirst: POSTER_STATES });
+const { ranked } = buildEdition();
+const rankById = new Map(ranked.map((r) => [r.id, r.rank]));
+const provById = new Map(ranked.map((r) => [r.id, r.provenance]));
 
 // keccak256("Minted(address,uint256,uint256)") - via cast sig-event
 const MINTED_TOPIC = '0x25b428dfde728ccfaddad7e29e4ac23c24ed7fd1a6e3e3f91894a9a073f5dfff';
@@ -25,6 +29,19 @@ const NETWORK = document.body.dataset.network || 'sepolia';
 
 const PHASE = ['Closed', 'Allowlist', 'Public'];
 
+// ERC-2981 royaltyInfo(uint256,uint256) - the well-known standard selector.
+const ROYALTY_INFO = '0x2a55205a';
+
+// The page reads the contract over a public node so the terms are visible
+// BEFORE anyone connects. Price, supply and phase are not private, and asking
+// for a wallet in order to show them is both hostile and slower.
+const RPC_URL = document.body.dataset.rpc
+  || (NETWORK === 'sepolia' ? 'https://sepolia.drpc.org' : 'https://eth.drpc.org');
+
+const opensea = (tokenId) => (NETWORK === 'sepolia'
+  ? `https://testnets.opensea.io/assets/sepolia/${CONTRACT}/${tokenId}`
+  : `https://opensea.io/assets/ethereum/${CONTRACT}/${tokenId}`);
+
 const el = (id) => document.getElementById(id);
 const state = { provider: null, account: null, chain: null, allowlist: null, chainState: null };
 
@@ -32,15 +49,33 @@ const state = { provider: null, account: null, chain: null, allowlist: null, cha
 
 const asUint = (hex) => BigInt(hex === '0x' ? '0x0' : hex);
 
+/// eth_call through the connected wallet when there is one, and through the
+/// public node when there is not, so every read works either way.
+async function ethCall(data) {
+  if (state.provider) return call(state.provider, CONTRACT, data);
+  const res = await fetch(RPC_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0', id: 1, method: 'eth_call',
+      params: [{ to: CONTRACT, data }, 'latest'],
+    }),
+  });
+  const json = await res.json();
+  if (json.error) throw new Error(json.error.message);
+  return json.result;
+}
+
 async function readChain() {
   if (!CONTRACT) return null;
-  const p = state.provider;
-  const [phase, price, minted, max, limit] = await Promise.all([
-    call(p, CONTRACT, SELECTOR.phase),
-    call(p, CONTRACT, SELECTOR.price),
-    call(p, CONTRACT, SELECTOR.totalMinted),
-    call(p, CONTRACT, SELECTOR.maxSupply),
-    call(p, CONTRACT, SELECTOR.publicLimit),
+  const [phase, price, minted, max, limit, royalty] = await Promise.all([
+    ethCall(SELECTOR.phase),
+    ethCall(SELECTOR.price),
+    ethCall(SELECTOR.totalMinted),
+    ethCall(SELECTOR.maxSupply),
+    ethCall(SELECTOR.publicLimit),
+    // ask for the fee on a round 1e6 so the percentage divides out exactly
+    ethCall(ROYALTY_INFO + encodeUint(1n) + encodeUint(1000000n)).catch(() => null),
   ]);
   const s = {
     phase: Number(asUint(phase)),
@@ -50,11 +85,16 @@ async function readChain() {
     limit: Number(asUint(limit)),
     claimedAllowlist: false,
     mintedPublic: 0,
+    royalty: null,
   };
+  // royaltyInfo returns (address receiver, uint256 amount); amount is word 2
+  if (royalty && royalty.length >= 130) {
+    s.royalty = Number(asUint('0x' + royalty.slice(66, 130))) / 10000;
+  }
   if (state.account) {
     const [ca, mp] = await Promise.all([
-      call(p, CONTRACT, SELECTOR.mintedAllowlist + encodeAddress(state.account)),
-      call(p, CONTRACT, SELECTOR.mintedPublic + encodeAddress(state.account)),
+      ethCall(SELECTOR.mintedAllowlist + encodeAddress(state.account)),
+      ethCall(SELECTOR.mintedPublic + encodeAddress(state.account)),
     ]);
     s.claimedAllowlist = asUint(ca) === 1n;
     s.mintedPublic = Number(asUint(mp));
@@ -102,16 +142,31 @@ function renderStatus() {
       + '<code>data-contract</code> on <code>mint.html</code>.</p>';
     return;
   }
-  if (!s) { box.innerHTML = '<p class="note">Connect a wallet to read the contract.</p>'; return; }
+  if (!s) { box.innerHTML = '<p class="note">Reading the contract…</p>'; return; }
 
-  const wrongChain = state.chain !== CHAIN[NETWORK].id;
+  const link = (href, text) =>
+    `<a target="_blank" rel="noopener" href="${href}">${text}</a>`;
+
   const rows = [
     ['Phase', PHASE[s.phase] ?? 'Unknown'],
-    ['Minted', `${s.minted} of ${s.max}`],
     ['Price', s.phase === 1 ? 'Free' : `${toEth(s.price)} ETH`],
-    ['Your wallet', state.account ? short(state.account) : '—'],
-    ['Network', wrongChain ? `Wrong network — switch to ${CHAIN[NETWORK].name}` : CHAIN[NETWORK].name],
+    ['Minted', `${s.minted} of ${s.max}`],
+    ['Remaining', `${s.max - s.minted}`],
+    ['Per wallet', s.phase === 1 ? '1 on the allowlist' : `${s.limit} in the public mint`],
+    ['Artwork', 'Random on mint · on chain'],
   ];
+  if (s.royalty !== null) rows.push(['Royalty', `${s.royalty}% on secondary`]);
+  rows.push(['Network', CHAIN[NETWORK].name]);
+  rows.push(['Contract', link(`${explorer()}/address/${CONTRACT}`, short(CONTRACT))]);
+
+  // Wallet-specific rows only once there is a wallet to be specific about.
+  if (state.account) {
+    const wrongChain = state.chain !== CHAIN[NETWORK].id;
+    rows.push(['Your wallet', short(state.account)]);
+    rows.push(['You have minted', `${s.mintedPublic}${s.claimedAllowlist ? ' + allowlist claim' : ''}`]);
+    if (wrongChain) rows.push(['⚠', `Wrong network — switch to ${CHAIN[NETWORK].name}`]);
+  }
+
   box.innerHTML = '<dl>' + rows.map(([k, v]) =>
     `<div class="row"><dt>${k}</dt><dd${/Wrong/.test(v) ? ' class="warn"' : ''}>${v}</dd></div>`
   ).join('') + '</dl>';
@@ -246,7 +301,9 @@ function showMinted(minted) {
       const t = traitsOf(EDITION[artwork - 1]);
       return `<figure data-i="${i}">${renderItem(EDITION[artwork - 1])}<figcaption>`
         + `<b>#${tokenId}</b> <span>${t.Word}</span></figcaption></figure>`;
-    }).join('') + `</div>`;
+    }).join('') + `</div>`
+    + `<p class="note">Click an item for its traits, transaction and marketplace links. `
+    + `<a href="./minted.html">See everything minted so far</a>.</p>`;
 
   for (const fig of box.querySelectorAll('.got figure')) {
     fig.onclick = () => openDetail(minted[Number(fig.dataset.i)]);
@@ -259,13 +316,22 @@ function openDetail({ tokenId, artwork, tx }) {
   el('art').innerHTML = renderItem(item);
   el('title').textContent = 'What Do I Get, 1978';
 
-  const rows = [['Item', `#${tokenId}`], ...Object.entries(traitsOf(item))];
-  let html = rows.map(([k, v]) =>
-    `<div class="row"><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-  html += `<div class="row"><dt>Transaction</dt><dd><a target="_blank" rel="noopener" `
-    + `href="${explorer()}/tx/${tx}">${short(tx)}</a></dd></div>`;
-  html += `<div class="row"><dt>Token</dt><dd><a target="_blank" rel="noopener" `
-    + `href="${explorer()}/nft/${CONTRACT}/${tokenId}">view on Etherscan</a></dd></div>`;
+  const link = (href, text) => `<a target="_blank" rel="noopener" href="${href}">${text}</a>`;
+  const row = (k, v, cls = '') => `<div class="row"><dt>${k}</dt><dd${cls}>${v}</dd></div>`;
+
+  const rows = [
+    ['Item', `#${tokenId}`],
+    ['Rarity rank', `${rankById.get(artwork)} of ${EDITION.length}`],
+    ...Object.entries(traitsOf(item)),
+  ];
+  let html = rows.map(([k, v]) => row(k, v)).join('');
+  if (provById.get(artwork)) {
+    html += row('Provenance', 'Malcolm Garrett 1978', ' class="prov"');
+  }
+  html += row('Transaction', link(`${explorer()}/tx/${tx}`, short(tx)));
+  html += row('Token', link(`${explorer()}/nft/${CONTRACT}/${tokenId}`, 'Etherscan'));
+  html += row('Marketplace', link(opensea(tokenId), 'OpenSea'));
+  html += row('Edition', '<a href="./minted.html">All mints</a>');
   el('traits').innerHTML = html;
   el('overlay').classList.add('on');
 }
@@ -293,7 +359,9 @@ async function onConnect(provider) {
 
 async function refresh() {
   try {
-    state.chain = await chainId(state.provider);
+    // No provider yet is the normal first load, not a failure: the contract is
+    // still read over the public node.
+    if (state.provider) state.chain = await chainId(state.provider);
     state.chainState = await readChain();
   } catch (err) {
     showError(err);
@@ -305,3 +373,7 @@ async function refresh() {
 state.allowlist = await loadAllowlist();
 renderWallets();
 renderStatus();
+
+// Read the terms straight away over the public node. Connecting a wallet then
+// only adds the rows that are about that wallet.
+refresh();

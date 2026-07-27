@@ -30,6 +30,9 @@ const provById = new Map(ranked.map((r) => [r.id, r.provenance]));
 
 const el = (id) => document.getElementById(id);
 const explorer = `https://${NETWORK === 'sepolia' ? 'sepolia.' : ''}etherscan.io`;
+const opensea = (tokenId) => (NETWORK === 'sepolia'
+  ? `https://testnets.opensea.io/assets/sepolia/${CONTRACT}/${tokenId}`
+  : `https://opensea.io/assets/ethereum/${CONTRACT}/${tokenId}`);
 let minted = [];
 
 async function rpc(method, params) {
@@ -128,6 +131,8 @@ function openDetail({ tokenId, artwork, owner, tx }) {
     + `href="${explorer}/address/${owner}">${owner.slice(0, 8)}…${owner.slice(-4)}</a></dd></div>`;
   html += `<div class="row"><dt>Token</dt><dd><a target="_blank" rel="noopener" `
     + `href="${explorer}/nft/${CONTRACT}/${tokenId}">Etherscan</a></dd></div>`;
+  html += `<div class="row"><dt>Marketplace</dt><dd><a target="_blank" rel="noopener" `
+    + `href="${opensea(tokenId)}">OpenSea</a></dd></div>`;
   el('traits').innerHTML = html;
   el('overlay').classList.add('on');
 }
