@@ -13,19 +13,39 @@ const TYPES = {
   '.svg': 'image/svg+xml',
   '.json': 'application/json',
   '.css': 'text/css; charset=utf-8',
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
+};
+
+const send = (res, code, body, type) => {
+  // no-store, or an edit stays invisible behind the disk cache
+  res.writeHead(code, { 'content-type': type, 'cache-control': 'no-store' });
+  res.end(body);
 };
 
 createServer(async (req, res) => {
   let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   if (path === '/') path = '/index.html';
-  const file = join(ROOT, normalize(path).replace(/^(\.\.[/\\])+/, ''));
+  const safe = normalize(path).replace(/^(\.\.[/\\])+/, '');
+  const file = join(ROOT, safe);
+
+  // vercel.json sets cleanUrls, so production serves /about from about.html.
+  // Mirror it, or every local URL differs from the real one by a .html and
+  // links that work in production 404 here.
+  const candidates = extname(file) ? [file] : [file, `${file}.html`];
+
+  for (const candidate of candidates) {
+    try {
+      const body = await readFile(candidate);
+      return send(res, 200, body, TYPES[extname(candidate)] || 'application/octet-stream');
+    } catch { /* try the next candidate */ }
+  }
+
+  // Vercel serves 404.html for unmatched routes on a static deploy.
   try {
-    const body = await readFile(file);
-    res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream' });
-    res.end(body);
+    return send(res, 404, await readFile(join(ROOT, '404.html')), TYPES['.html']);
   } catch {
-    res.writeHead(404, { 'content-type': 'text/plain' });
-    res.end('not found');
+    return send(res, 404, 'not found', 'text/plain');
   }
 }).listen(PORT, () => {
   console.log(`\n  WHAT DO I GET?  →  http://localhost:${PORT}\n`);
