@@ -146,6 +146,19 @@ console.log(`  confidently identified: ${matches.filter((m) => m.confident).leng
   + `  (${matches.filter((m) => m.confident && !m.byEye).length} measured, ${byEye} read from the image)`);
 console.log(`  distinct states in the poster: ${seen.size}`);
 
+// how the 63 tiles pile onto those states - the shuffle evidence
+{
+  const tally = new Map();
+  for (const m of matches.filter((x) => x.confident)) {
+    const k = [m.rot, m.mirror, m.word, m.plane, m.plate].join('|');
+    tally.set(k, (tally.get(k) || 0) + 1);
+  }
+  const counts = [...tally.values()].sort((a, b) => b - a);
+  const hist = counts.reduce((h, v) => (h[v] = (h[v] || 0) + 1, h), {});
+  console.log(`  collisions: ${63 - counts.length}, most repeated ${counts[0]}x,`,
+    `histogram ${JSON.stringify(hist)} (state used Nx : how many states)`);
+}
+
 const byPlate = {};
 for (const m of seen.values()) byPlate[m.plate] = (byPlate[m.plate] || 0) + 1;
 console.log('  by plate:', byPlate);

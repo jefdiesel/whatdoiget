@@ -101,7 +101,7 @@ export const ABOUT_HTML = `
     height of 0.070 with a 0.037 inset. Even the rarity is measured rather than
     assigned: the white region has three edges type can align to, the shortest is
     too short for the longest words, and the 3:2 ratio falls out of the geometry
-    without anyone choosing it. The 36 items that reproduce a state Garrett
+    without anyone choosing it. The 42 items that reproduce a state Garrett
     actually printed carry his name.
   </p>
   <p>
@@ -132,7 +132,7 @@ export const ABOUT_HTML = `
   </p>
   <p>
     The reading also found what the artist did not intend to be found. The 63
-    tiles collapse to only <b>40 distinct states</b>: 23 collisions, one
+    tiles collapse to only <b>42 distinct states</b>: 21 collisions, one
     arrangement repeated five times. Drawing 63 times at random from a 96-state
     bag predicts about 46 distinct, so the poster is not a designed sequence at
     all — it is a shuffle, pasted down as it came. That is why this edition is
