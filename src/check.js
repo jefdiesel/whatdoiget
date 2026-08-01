@@ -6,6 +6,7 @@
 // must show up without anyone hard-refreshing.
 
 import { available, connect, short } from './wallet.js';
+import { INK, PAPER, SPOT, CUT_TOP, CUT_BOTTOM } from './master.js';
 
 const el = (id) => document.getElementById(id);
 let account = null;
@@ -57,6 +58,26 @@ function showError(err) {
     : (err?.message || String(err));
 }
 
+// The verdict as a square in the edition's own language: the master cut with
+// ink to the left, the word reversed out of the ink the way the inverted plate
+// does it, skewed like every piece of display type on the site. ON! prints on
+// the edition's navy plate, OFF on the red one - both colours come from
+// master.js, not from here.
+function verdictArt(on) {
+  const S = 480;
+  const word = on ? 'ON!' : 'OFF';
+  const ink = on ? INK : SPOT;
+  const cut = `0,0 ${CUT_TOP * S},0 ${CUT_BOTTOM * S},${S} 0,${S}`;
+  return `<svg class="verdict-art" viewBox="0 0 ${S} ${S}" role="img"
+    aria-label="${on ? 'On the list' : 'Not on the list'}">
+    <rect width="${S}" height="${S}" fill="${PAPER}"/>
+    <polygon points="${cut}" fill="${ink}"/>
+    <text x="26" y="200" fill="${PAPER}" transform="skewX(-9)" transform-origin="26 200"
+      font-family="Haettenschweiler, 'Arial Narrow', Impact, sans-serif"
+      font-size="170" font-weight="700">${word}</text>
+  </svg>`;
+}
+
 async function check() {
   el('error').textContent = '';
   const addr = el('address').value.trim();
@@ -68,12 +89,10 @@ async function check() {
   try {
     const list = await loadAllowlist();
     const onList = Boolean(list?.proofs?.[addr.toLowerCase()]);
-    box.innerHTML = onList
-      ? `<div class="verdict yes">On the list</div>
-         <p class="note">${short(addr)} can mint <b>1 free</b> when the allowlist phase opens.</p>`
-      : `<div class="verdict no">Not on the list</div>
-         <p class="note">${short(addr)} has no free mint. The list is still being added to
-         before the drop — check again later, or come back for the public mint.</p>`;
+    box.innerHTML = verdictArt(onList) + (onList
+      ? `<p class="note">${short(addr)} can mint <b>1 free</b> when the allowlist phase opens.</p>`
+      : `<p class="note">${short(addr)} has no free mint. The list is still being added to
+         before the drop — check again later, or come back for the public mint.</p>`);
   } catch (err) {
     box.innerHTML = '';
     showError(err);

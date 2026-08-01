@@ -40,13 +40,9 @@
   #error { text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--spot);
            font-family: Helvetica, Arial, sans-serif; margin-top: 10px; min-height: 1.4em; }
   #result { margin-top: 22px; }
-  .verdict {
-    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-    font-size: 44px; line-height: 1; transform: skewX(-9deg); text-transform: uppercase;
-    display: inline-block; padding: 10px 18px 8px; color: #fff;
-  }
-  .verdict.yes { background: var(--ink); }
-  .verdict.no  { background: var(--spot); }
+  /* the verdict is a square item, pasted like a tile off the sheet */
+  .verdict-art { width: min(320px, 78vw); height: auto; display: block;
+                 box-shadow: 0 14px 44px rgba(22,32,43,.25); }
   footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
            border-top: 3px solid var(--ink); display: flex; align-items: center;
            gap: .3em; padding: 8px 16px; font-size: 20px;
