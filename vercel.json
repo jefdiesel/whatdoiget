@@ -5,7 +5,7 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/minted/:address", "destination": "/minted.html" }
+    { "source": "/minted/:address", "destination": "/minted" }
   ],
   "headers": [
     {
