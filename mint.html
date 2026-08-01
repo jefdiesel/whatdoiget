@@ -103,10 +103,9 @@
   <div id="drop">
     <div>
       <div id="count" aria-live="off">–:––:––</div>
-      <p class="note">Allowlist free claims at 4:00 PM eastern — two hours only.
+      <p class="note">Allowlist free claims are open — until 6:00 PM eastern only.
         Public mint at 6:00 PM, 0.001978 ETH, three per wallet.</p>
     </div>
-    <button id="ghost-mint" class="ghost" disabled>Mint</button>
   </div>
 
   <div id="status"></div>
@@ -142,17 +141,18 @@
 </footer>
 
 <script>
-  // Countdown to the drop: 4:00 PM eastern, 1 August 2026. Pinned to a zoned
-  // timestamp so every visitor counts to the same instant, not their local 4pm.
+  // Counts down to the end of the free-claim window: 6:00 PM eastern,
+  // 1 August 2026, when the public mint opens. Pinned to a zoned timestamp so
+  // every visitor counts to the same instant.
   (() => {
-    const target = new Date('2026-08-01T16:00:00-04:00').getTime();
+    const target = new Date('2026-08-01T18:00:00-04:00').getTime();
     const count = document.getElementById('count');
     const tick = () => {
       const left = target - Date.now();
       if (left <= 0) {
         clearInterval(timer);
         count.textContent = 'NOW';
-        // The contract address arrives with the deploy; reload picks it up.
+        // The phase flip happens around this moment; reload picks it up.
         setTimeout(() => location.reload(), 30000);
         return;
       }
