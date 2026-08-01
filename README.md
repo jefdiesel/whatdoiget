@@ -165,8 +165,6 @@ Before mainnet:
 - ~~Etherscan verification~~ — configured in `foundry.toml`; needs
   `ETHERSCAN_API_KEY` exported at deploy time
 - a second pair of eyes on the contract while it is still changeable
-- decide whether the Sepolia test wallet (first line of
-  `contracts/data/allowlist.txt`) keeps its free mint on mainnet
 
 Launch sequence, in order:
 

@@ -1,6 +1,5 @@
-# This first address was the Sepolia test wallet. DECIDE BEFORE THE FINAL
-# MAINNET ROOT: keep it only if it should also have a free mint on mainnet;
-# otherwise delete the line and rebuild.
+# The Sepolia test wallet - deliberately kept on the mainnet list (decided
+# 2026-08-01).
 0xDCD064E82499652BF5f132afD293c1B4a2958800
 
 # Added 2026-08-01
