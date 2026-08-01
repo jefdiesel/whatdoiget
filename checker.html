@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Do I Get, 1978 — Checker</title>
+<meta name="description" content="Check whether your wallet is on the allowlist for the free mint of What Do I Get, 1978.">
+<link rel="stylesheet" href="./style.css">
+<style>
+  /* style.css centres main as a flex column, which shrink-wraps every child.
+     This page is a document, not a gallery, so lay it out as one. */
+  main.checker { display: block; max-width: 62ch; margin: 0 auto; padding: 34px 22px 120px; }
+  .checker h2 {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 30px; margin: 0 0 6px; transform: skewX(-9deg);
+  }
+  .checker .lede {
+    text-transform: none; letter-spacing: 0; font-size: 14px; line-height: 1.6;
+    font-family: Helvetica, Arial, sans-serif; opacity: .8; margin: 0 0 22px;
+  }
+  .step {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 18px; margin: 0 0 10px; transform: skewX(-9deg); opacity: .75;
+  }
+  #wallets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; }
+  .wallet { display: flex; align-items: center; gap: 8px; background: none;
+            color: var(--ink); border: 2px solid var(--ink); }
+  .wallet:hover { background: var(--ink); color: var(--paper); }
+  #connected { text-transform: none; letter-spacing: 0; font-size: 13px; opacity: .75;
+               font-family: Helvetica, Arial, sans-serif; min-height: 1.4em; margin: 0 0 18px; }
+  #lookup { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 8px; }
+  #address { flex: 1 1 24ch; font: inherit; font-size: 13px; letter-spacing: 0;
+             text-transform: none; font-family: ui-monospace, Menlo, monospace;
+             padding: 9px 10px; border: 2px solid var(--ink); background: var(--paper);
+             color: var(--ink); min-width: 0; }
+  .primary { background: var(--spot); border-color: var(--spot); color: #fff; }
+  .note { text-transform: none; letter-spacing: 0; font-size: 13px; opacity: .75;
+          font-family: Helvetica, Arial, sans-serif; margin: 6px 0 0; }
+  .note b { opacity: 1; }
+  #error { text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--spot);
+           font-family: Helvetica, Arial, sans-serif; margin-top: 10px; min-height: 1.4em; }
+  #result { margin-top: 22px; }
+  .verdict {
+    font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+    font-size: 44px; line-height: 1; transform: skewX(-9deg); text-transform: uppercase;
+    display: inline-block; padding: 10px 18px 8px; color: #fff;
+  }
+  .verdict.yes { background: var(--ink); }
+  .verdict.no  { background: var(--spot); }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
+           border-top: 3px solid var(--ink); display: flex; align-items: center;
+           gap: .3em; padding: 8px 16px; font-size: 20px;
+           font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
+           text-transform: uppercase; line-height: 1; }
+  footer > * { transform: skewX(-9deg); }
+  footer .mark { font-weight: 700; }
+  footer a { color: var(--ink); text-decoration: none; }
+  footer a:hover { color: var(--spot); }
+  footer .dot { opacity: .5; }
+</style>
+</head>
+<body>
+
+<main class="checker">
+  <h2>Allowlist checker</h2>
+  <p class="lede">One free mint per wallet on the allowlist. Connect to check your
+    wallet, or paste any address. The list is still growing before the drop, so a
+    wallet that is not on it yet may be by mint time.</p>
+
+  <h3 class="step">Connect</h3>
+  <div id="wallets"></div>
+  <p id="connected"></p>
+
+  <h3 class="step">Or paste an address</h3>
+  <div id="lookup">
+    <input id="address" placeholder="0x…" spellcheck="false" autocomplete="off">
+    <button id="check" class="primary">Check</button>
+  </div>
+
+  <div id="result"></div>
+  <div id="error"></div>
+</main>
+
+<footer>
+  <span class="mark">What Do I Get, 1978</span>
+  <span class="dot">·</span>
+  <a href="./index.html">7:9</a>
+  <span class="dot">·</span>
+  <a href="./all.html">12:15</a>
+  <span class="dot">·</span>
+  <a href="./traits.html">Traits</a>
+  <span class="dot">·</span>
+  <a href="./about.html">About</a>
+</footer>
+
+<script type="module" src="./src/check.js"></script>
+</body>
+</html>
