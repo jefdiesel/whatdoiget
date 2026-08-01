@@ -179,9 +179,9 @@ Launch sequence, in order:
    --verify` (env vars documented at the top of that file). The contract opens
    Closed.
 3. `cast send $NFT 'setAllowlistRoot(bytes32)' $ROOT`
-4. Wire the mint page back: restore `mint.html` from git
-   (`git show c6633cb^:mint.html`), set `data-contract` to the new address and
-   `data-network="mainnet"`, restore the Mint links
+4. Wire the mint page: `mint.html` is already live at /mint pointed at mainnet
+   with an empty contract — set `data-contract` to the deployed address,
+   restore `minted.html` and the Mint links in the banners
 5. `cast send $NFT 'setPhase(uint8)' 1` — allowlist opens
 6. Later, `setPhase(2)` for the public mint at 0.001978 ETH, 3 per wallet
 

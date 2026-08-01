@@ -138,8 +138,9 @@ function renderStatus() {
   const box = el('status');
 
   if (!CONTRACT) {
-    box.innerHTML = '<p class="note">Not deployed yet. The contract address goes in '
-      + '<code>data-contract</code> on <code>mint.html</code>.</p>';
+    box.innerHTML = '<p class="note">The mint has not opened. The allowlist goes first — '
+      + '<a href="./checker.html">check your wallet</a> for a free mint. '
+      + 'The contract address will appear here when the drop is live.</p>';
     return;
   }
   if (!s) { box.innerHTML = '<p class="note">Reading the contract…</p>'; return; }
