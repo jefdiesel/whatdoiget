@@ -37,14 +37,6 @@
   #action select { font: inherit; padding: 7px 10px; border: 2px solid var(--ink);
                    background: var(--paper); text-transform: uppercase; }
   .primary { background: var(--spot); border-color: var(--spot); color: #fff; }
-  #drop { display: flex; align-items: center; justify-content: space-between;
-          gap: 18px; margin: 0 0 26px; border-top: 3px solid var(--ink);
-          border-bottom: 1px solid rgba(22,32,43,.22); padding: 14px 0; }
-  #count { font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-           font-size: 64px; line-height: 1; transform: skewX(-9deg);
-           font-variant-numeric: tabular-nums; }
-  #ghost-mint:disabled { opacity: .4; cursor: default; }
-  #ghost-mint:disabled:hover { background: none; color: var(--ink); }
   .note { text-transform: none; letter-spacing: 0; font-size: 13px; opacity: .75;
           font-family: Helvetica, Arial, sans-serif; margin: 6px 0 0; width: 100%; }
   #error { text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--spot);
@@ -100,14 +92,6 @@
     <a href="./checker.html">Check your wallet for a free mint</a>, or
     <a href="./traits.html">browse the edition</a>.</p>
 
-  <div id="drop">
-    <div>
-      <div id="count" aria-live="off">–:––:––</div>
-      <p class="note">Allowlist free claims are open — until 6:00 PM eastern only.
-        Public mint at 6:00 PM, 0.001978 ETH, three per wallet.</p>
-    </div>
-  </div>
-
   <div id="status"></div>
   <h3 class="step">Connect</h3>
   <div id="wallets"></div>
@@ -140,31 +124,6 @@
   <a href="./checker.html">Checker</a>
 </footer>
 
-<script>
-  // Counts down to the end of the free-claim window: 6:00 PM eastern,
-  // 1 August 2026, when the public mint opens. Pinned to a zoned timestamp so
-  // every visitor counts to the same instant.
-  (() => {
-    const target = new Date('2026-08-01T18:00:00-04:00').getTime();
-    const count = document.getElementById('count');
-    const tick = () => {
-      const left = target - Date.now();
-      if (left <= 0) {
-        clearInterval(timer);
-        count.textContent = 'NOW';
-        // The phase flip happens around this moment; reload picks it up.
-        setTimeout(() => location.reload(), 30000);
-        return;
-      }
-      const h = Math.floor(left / 3600000);
-      const m = Math.floor(left / 60000) % 60;
-      const s = Math.floor(left / 1000) % 60;
-      count.textContent = `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    };
-    tick();
-    const timer = setInterval(tick, 1000);
-  })();
-</script>
 <script type="module" src="./src/mint.js"></script>
 </body>
 </html>
