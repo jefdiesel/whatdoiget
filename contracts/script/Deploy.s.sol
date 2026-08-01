@@ -13,8 +13,17 @@ import {Glyphs} from "../src/Glyphs.sol";
 ///   export OWNER=0x...            # owner + royalty receiver; defaults to the deployer
 ///   forge script script/Deploy.s.sol --rpc-url sepolia --broadcast --verify
 ///
+/// Mainnet is the same script against the other endpoint:
+///   export MAINNET_RPC_URL=...
+///   export PRIVATE_KEY=...        # the deployer; OWNER should be a wallet you
+///   export OWNER=0x...            # keep long-term - it receives royalties and withdraw()
+///   export ETHERSCAN_API_KEY=...  # --verify reads it via foundry.toml
+///   forge script script/Deploy.s.sol --rpc-url mainnet --broadcast --verify
+///
 /// The contract opens Closed. Nothing can be minted until the owner sets the
-/// allowlist root and moves the phase on.
+/// allowlist root and moves the phase on:
+///   cast send $NFT 'setAllowlistRoot(bytes32)' $ROOT --rpc-url mainnet --private-key $PRIVATE_KEY
+///   cast send $NFT 'setPhase(uint8)' 1 --rpc-url mainnet --private-key $PRIVATE_KEY
 contract Deploy is Script {
     function run() external {
         uint256 pk = vm.envUint("PRIVATE_KEY");

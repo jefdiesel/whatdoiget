@@ -8,8 +8,16 @@
 // window.ethereum is still read as a fallback for wallets that never announce.
 
 const CHAIN = {
-  sepolia: { id: 11155111, hex: '0xaa36a7', name: 'Sepolia' },
-  mainnet: { id: 1, hex: '0x1', name: 'Ethereum' },
+  sepolia: {
+    id: 11155111, hex: '0xaa36a7', name: 'Sepolia',
+    rpc: 'https://ethereum-sepolia-rpc.publicnode.com',
+    explorer: 'https://sepolia.etherscan.io',
+  },
+  mainnet: {
+    id: 1, hex: '0x1', name: 'Ethereum',
+    rpc: 'https://ethereum-rpc.publicnode.com',
+    explorer: 'https://etherscan.io',
+  },
 };
 
 const providers = new Map();   // uuid -> { info, provider }
@@ -66,8 +74,8 @@ export async function switchChain(provider, target = 'sepolia') {
         chainId: c.hex,
         chainName: c.name,
         nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-        rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
-        blockExplorerUrls: ['https://sepolia.etherscan.io'],
+        rpcUrls: [c.rpc],
+        blockExplorerUrls: [c.explorer],
       }],
     });
   }

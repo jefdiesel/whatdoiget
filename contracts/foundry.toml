@@ -13,3 +13,8 @@ fs_permissions = [{ access = "read", path = "./data" }]
 
 [rpc_endpoints]
 sepolia = "${SEPOLIA_RPC_URL}"
+mainnet = "${MAINNET_RPC_URL}"
+
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}" }
+mainnet = { key = "${ETHERSCAN_API_KEY}" }

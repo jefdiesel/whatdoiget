@@ -160,10 +160,28 @@ live mint page pointing at a testnet contract only misleads. `src/mint.js`,
 Before mainnet:
 
 - a deployer wallet the owner controls
-- a real multi-address allowlist run end to end (only a single-address tree has
-  been tested, which is degenerate — the proof array is empty)
-- Etherscan verification
+- ~~a real multi-address allowlist run end to end~~ — the live list is now 46
+  addresses and `test_JsProofsVerifyOnChain` mints for every one of them
+- ~~Etherscan verification~~ — configured in `foundry.toml`; needs
+  `ETHERSCAN_API_KEY` exported at deploy time
 - a second pair of eyes on the contract while it is still changeable
+- decide whether the Sepolia test wallet (first line of
+  `contracts/data/allowlist.txt`) keeps its free mint on mainnet
+
+Launch sequence, in order:
+
+1. Final allowlist build: `cd contracts && node script/allowlist.mjs` — note the
+   root it prints, run `forge test`, deploy the site so `/checker` serves the
+   final list
+2. Deploy: `forge script script/Deploy.s.sol --rpc-url mainnet --broadcast
+   --verify` (env vars documented at the top of that file). The contract opens
+   Closed.
+3. `cast send $NFT 'setAllowlistRoot(bytes32)' $ROOT`
+4. Wire the mint page back: restore `mint.html` from git
+   (`git show c6633cb^:mint.html`), set `data-contract` to the new address and
+   `data-network="mainnet"`, restore the Mint links
+5. `cast send $NFT 'setPhase(uint8)' 1` — allowlist opens
+6. Later, `setPhase(2)` for the public mint at 0.001978 ETH, 3 per wallet
 
 ## Rights
 
