@@ -34,9 +34,12 @@ const ROYALTY_INFO = '0x2a55205a';
 
 // The page reads the contract over a public node so the terms are visible
 // BEFORE anyone connects. Price, supply and phase are not private, and asking
-// for a wallet in order to show them is both hostile and slower.
-const RPC_URL = document.body.dataset.rpc
-  || (NETWORK === 'sepolia' ? 'https://sepolia.drpc.org' : 'https://eth.drpc.org');
+// for a wallet in order to show them is both hostile and slower. A list, not a
+// single endpoint: drpc fell over mid-drop, and one provider is one outage.
+const RPC_URLS = document.body.dataset.rpc ? [document.body.dataset.rpc]
+  : NETWORK === 'sepolia'
+    ? ['https://sepolia.drpc.org', 'https://ethereum-sepolia-rpc.publicnode.com']
+    : ['https://ethereum-rpc.publicnode.com', 'https://rpc.mevblocker.io', 'https://eth.drpc.org'];
 
 const opensea = (tokenId) => (NETWORK === 'sepolia'
   ? `https://testnets.opensea.io/assets/sepolia/${CONTRACT}/${tokenId}`
@@ -50,20 +53,29 @@ const state = { provider: null, account: null, chain: null, allowlist: null, cha
 const asUint = (hex) => BigInt(hex === '0x' ? '0x0' : hex);
 
 /// eth_call through the connected wallet when there is one, and through the
-/// public node when there is not, so every read works either way.
+/// public nodes when there is not, so every read works either way. Providers
+/// are tried in order; the first that answers is moved to the front so one
+/// slow endpoint is only paid for once, not on all six reads of a refresh.
 async function ethCall(data) {
   if (state.provider) return call(state.provider, CONTRACT, data);
-  const res = await fetch(RPC_URL, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      jsonrpc: '2.0', id: 1, method: 'eth_call',
-      params: [{ to: CONTRACT, data }, 'latest'],
-    }),
-  });
-  const json = await res.json();
-  if (json.error) throw new Error(json.error.message);
-  return json.result;
+  let lastErr;
+  for (const url of [...RPC_URLS]) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0', id: 1, method: 'eth_call',
+          params: [{ to: CONTRACT, data }, 'latest'],
+        }),
+      });
+      const json = await res.json();
+      if (json.error) throw new Error(json.error.message);
+      if (RPC_URLS[0] !== url) RPC_URLS.splice(0, 0, ...RPC_URLS.splice(RPC_URLS.indexOf(url), 1));
+      return json.result;
+    } catch (err) { lastErr = err; }
+  }
+  throw lastErr;
 }
 
 async function readChain() {

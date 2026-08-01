@@ -11,12 +11,21 @@ import { buildEdition } from './rarity.js';
 const CONTRACT = document.body.dataset.contract || '';
 const NETWORK = document.body.dataset.network || 'sepolia';
 const FROM_BLOCK = document.body.dataset.fromBlock || '0x0';
-// publicnode and 1rpc both refuse a getLogs range this wide (archive-gated, or
-// capped at 50 blocks). drpc serves it, so it is the default; override with
-// data-rpc on the body if that ever changes.
-const RPC = document.body.dataset.rpc || (NETWORK === 'sepolia'
-  ? 'https://sepolia.drpc.org'
-  : 'https://eth.drpc.org');
+// Most free endpoints refuse a getLogs range this wide (archive-gated, or
+// capped at 10-50 blocks), and flashbots answers it with an EMPTY result
+// rather than an error - a lie that would render as "Nothing minted yet".
+// So: a list of providers measured to serve this exact query, tried in order,
+// each answer cross-checked against totalMinted() before it is believed.
+// Override with data-rpc on the body to pin a single endpoint.
+const LOG_RPCS = document.body.dataset.rpc ? [document.body.dataset.rpc]
+  : NETWORK === 'sepolia'
+    ? ['https://sepolia.drpc.org']
+    : ['https://rpc.mevblocker.io', 'https://eth.drpc.org'];
+// eth_call is served by everyone; this list is for the totalMinted cross-check.
+const CALL_RPCS = NETWORK === 'sepolia'
+  ? ['https://ethereum-sepolia-rpc.publicnode.com', 'https://sepolia.drpc.org']
+  : ['https://ethereum-rpc.publicnode.com', 'https://rpc.mevblocker.io', 'https://eth.drpc.org'];
+const TOTAL_MINTED = '0xa2309ff8'; // totalMinted()
 
 // keccak256("Minted(address,uint256,uint256)")
 const MINTED_TOPIC = '0x25b428dfde728ccfaddad7e29e4ac23c24ed7fd1a6e3e3f91894a9a073f5dfff';
@@ -35,8 +44,8 @@ const opensea = (tokenId) => (NETWORK === 'sepolia'
   : `https://opensea.io/assets/ethereum/${CONTRACT}/${tokenId}`);
 let minted = [];
 
-async function rpc(method, params) {
-  const res = await fetch(RPC, {
+async function rpc(url, method, params) {
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
@@ -46,6 +55,15 @@ async function rpc(method, params) {
   return json.result;
 }
 
+/// The same request against each provider in turn; first answer wins.
+async function rpcAny(urls, method, params) {
+  let lastErr;
+  for (const url of urls) {
+    try { return await rpc(url, method, params); } catch (err) { lastErr = err; }
+  }
+  throw lastErr;
+}
+
 async function load() {
   if (!CONTRACT) {
     el('grid').innerHTML = '<p class="note">Not deployed yet.</p>';
@@ -53,12 +71,30 @@ async function load() {
   }
   el('count').textContent = 'reading the chain…';
   try {
-    const logs = await rpc('eth_getLogs', [{
+    // How many logs there OUGHT to be. Best-effort: if every call provider is
+    // down too, 0 accepts the first log answer, which is no worse than before.
+    const total = await rpcAny(CALL_RPCS, 'eth_call', [{ to: CONTRACT, data: TOTAL_MINTED }, 'latest'])
+      .then((r) => Number(BigInt(r === '0x' ? '0x0' : r)))
+      .catch(() => 0);
+
+    const params = [{
       address: CONTRACT,
       topics: [MINTED_TOPIC],
       fromBlock: FROM_BLOCK,
       toBlock: 'latest',
-    }]);
+    }];
+    let logs = null, lastErr;
+    for (const url of LOG_RPCS) {
+      try {
+        const got = await rpc(url, 'eth_getLogs', params);
+        // Believe a provider only if it accounts for every known mint;
+        // otherwise keep the fullest answer seen and try the next.
+        if (!logs || got.length > logs.length) logs = got;
+        if (logs.length >= total) break;
+      } catch (err) { lastErr = err; }
+    }
+    if (logs === null) throw lastErr ?? new Error('no provider answered');
+
     minted = logs.map((l) => ({
       tokenId: Number(BigInt(l.topics[2])),
       artwork: Number(BigInt(l.data)),
