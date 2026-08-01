@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>What Do I Get, 1978 — Minted</title>
+<!-- This page also serves /minted/<address>, one directory deeper; base keeps
+     every relative URL resolving from the root either way. -->
+<base href="/">
 <link rel="stylesheet" href="./style.css">
 <style>
   main { max-width: 1300px; margin: 0 auto; padding: 24px 22px 90px; }
@@ -12,6 +15,10 @@
   .bar h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif;
             font-size: 26px; margin: 0; transform: skewX(-9deg); }
   #count { opacity: .55; }
+  #wallets { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 14px; }
+  .wallet { display: flex; align-items: center; gap: 8px; background: none;
+            color: var(--ink); border: 2px solid var(--ink); }
+  .wallet:hover { background: var(--ink); color: var(--paper); }
   /* seamless, borderless, centred - the block sizes itself in layout() */
   #grid { display: grid; gap: 0; margin: 0 auto; }
   #grid figure { margin: 0; cursor: pointer; position: relative; line-height: 0; }
@@ -62,7 +69,9 @@
     <span id="count"></span>
     <button id="shuffle" class="ghost">Redistribute</button>
     <button id="reload" class="ghost">Reload</button>
+    <button id="mine" class="ghost">Mine</button>
   </div>
+  <div id="wallets"></div>
   <div id="grid"></div>
 </main>
 

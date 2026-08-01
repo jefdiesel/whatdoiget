@@ -7,6 +7,8 @@
 import { enumerateEdition, renderItem, traitsOf } from './item.js';
 import { POSTER_STATES } from './provenance.js';
 import { buildEdition } from './rarity.js';
+import { available, connect, short } from './wallet.js';
+import { resolveEns, looksLikeEns } from './ens.js';
 
 const CONTRACT = document.body.dataset.contract || '';
 const NETWORK = document.body.dataset.network || 'sepolia';
@@ -37,6 +39,11 @@ const rankById = new Map(ranked.map((r) => [r.id, r.rank]));
 // edition rather than assuming the first N ranks carry it.
 const provById = new Map(ranked.map((r) => [r.id, r.provenance]));
 
+// /minted shows everyone; /minted/<address or name.eth> shows one minter.
+// The slug is resolved once at load - an ENS name becomes an address before
+// the log query, and the event's indexed `to` lets the node do the filtering.
+const SLUG = decodeURIComponent(location.pathname).match(/^\/minted\/([^/]+)\/?$/)?.[1] ?? null;
+
 const el = (id) => document.getElementById(id);
 const explorer = `https://${NETWORK === 'sepolia' ? 'sepolia.' : ''}etherscan.io`;
 const opensea = (tokenId) => (NETWORK === 'sepolia'
@@ -64,6 +71,18 @@ async function rpcAny(urls, method, params) {
   throw lastErr;
 }
 
+/// The slug as an address: passed through if it already is one, resolved on
+/// mainnet if it is an ENS name, null when there is no slug.
+async function slugAddress() {
+  if (!SLUG) return null;
+  if (/^0x[0-9a-fA-F]{40}$/.test(SLUG)) return SLUG.toLowerCase();
+  if (looksLikeEns(SLUG)) {
+    const addr = await resolveEns(SLUG);
+    if (addr) return addr.toLowerCase();
+  }
+  throw new Error(`"${SLUG}" is not an address or a name that resolves`);
+}
+
 async function load() {
   if (!CONTRACT) {
     el('grid').innerHTML = '<p class="note">Not deployed yet.</p>';
@@ -71,15 +90,21 @@ async function load() {
   }
   el('count').textContent = 'reading the chain…';
   try {
-    // How many logs there OUGHT to be. Best-effort: if every call provider is
-    // down too, 0 accepts the first log answer, which is no worse than before.
-    const total = await rpcAny(CALL_RPCS, 'eth_call', [{ to: CONTRACT, data: TOTAL_MINTED }, 'latest'])
-      .then((r) => Number(BigInt(r === '0x' ? '0x0' : r)))
-      .catch(() => 0);
+    const who = await slugAddress();
+
+    // How many logs there OUGHT to be - only knowable for the unfiltered
+    // view. Best-effort: if every call provider is down too, 0 accepts the
+    // first log answer, which is no worse than before.
+    const total = who ? 0
+      : await rpcAny(CALL_RPCS, 'eth_call', [{ to: CONTRACT, data: TOTAL_MINTED }, 'latest'])
+        .then((r) => Number(BigInt(r === '0x' ? '0x0' : r)))
+        .catch(() => 0);
 
     const params = [{
       address: CONTRACT,
-      topics: [MINTED_TOPIC],
+      topics: who
+        ? [MINTED_TOPIC, `0x${who.slice(2).padStart(64, '0')}`]
+        : [MINTED_TOPIC],
       fromBlock: FROM_BLOCK,
       toBlock: 'latest',
     }];
@@ -133,9 +158,11 @@ function layout(n) {
 
 function render(shuffle = false) {
   const list = shuffle ? shuffled(minted) : minted;
-  el('count').textContent = minted.length
-    ? `${minted.length} minted of 180`
-    : 'Nothing minted yet.';
+  el('count').textContent = SLUG
+    ? (minted.length
+      ? `${minted.length} minted by ${SLUG.length > 14 ? short(SLUG) : SLUG}`
+      : `Nothing minted by ${SLUG.length > 14 ? short(SLUG) : SLUG} yet.`)
+    : (minted.length ? `${minted.length} minted of 180` : 'Nothing minted yet.');
   layout(list.length);
 
   // No captions in the block: they would sit between the rows and break it.
@@ -196,6 +223,36 @@ function shuffled(arr) {
   }
   return a;
 }
+
+// Mine: connect a wallet, land on its slug. One announced wallet connects
+// straight away; more than one gets the chooser row.
+async function goMine(provider) {
+  try {
+    const account = await connect(provider);
+    location.href = `/minted/${account.toLowerCase()}`;
+  } catch (err) {
+    if (err?.code !== 4001) el('count').textContent = err?.message || String(err);
+  }
+}
+
+el('mine').onclick = () => {
+  const list = available();
+  const box = el('wallets');
+  if (!list.length) {
+    box.innerHTML = '<p class="note">No browser wallet found — open /minted/your-address instead.</p>';
+    return;
+  }
+  if (list.length === 1) return goMine(list[0].provider);
+  box.innerHTML = '';
+  for (const { info, provider } of list) {
+    const b = document.createElement('button');
+    b.className = 'wallet';
+    b.innerHTML = (info.icon ? `<img src="${info.icon}" alt="" width="22" height="22">` : '')
+      + `<span>${info.name}</span>`;
+    b.onclick = () => goMine(provider);
+    box.append(b);
+  }
+};
 
 addEventListener('resize', () => layout(minted.length));
 el('shuffle').onclick = () => render(true);

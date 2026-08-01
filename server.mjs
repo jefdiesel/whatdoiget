@@ -26,6 +26,9 @@ const send = (res, code, body, type) => {
 createServer(async (req, res) => {
   let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   if (path === '/') path = '/index.html';
+  // /minted/<address or name> is the minted page filtered by slug.
+  // vercel.json rewrites it in production; mirror it here.
+  if (/^\/minted\/[^/]+$/.test(path)) path = '/minted.html';
   const safe = normalize(path).replace(/^(\.\.[/\\])+/, '');
   const file = join(ROOT, safe);
 
