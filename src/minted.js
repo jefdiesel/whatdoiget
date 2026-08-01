@@ -109,14 +109,22 @@ async function load() {
   render();
 }
 
-/// Lay the minted items out as a near-square block: 3 across at three, 2x2 at
-/// four, 3x2 at six, 3x3 at nine, and so on. Columns are ceil(sqrt(n)), capped
-/// by what actually fits the viewport so it keeps working at 180.
+/// Lay the minted items out as a near-square block that steps toward the
+/// poster. Up to 5x5 it grows by square root: 3 across at three, 2x2 at four,
+/// 3x3 at nine. Past a filled 5x5 the tiles scale down in three steps - 7 wide
+/// through 49, 9 wide through 81 - and the final step goes 12 wide, so the
+/// complete edition sits as the 12x15 sheet, the poster reassembled. Columns
+/// stay capped by what the viewport fits: phones hold 2-3 across and scroll.
 function layout(n) {
   const TILE = 210;                       // a comfortable tile at full size
-  const fits = Math.max(1, Math.floor((Math.min(innerWidth, 1300) - 44) / 140));
-  // up to three sit in a single row; past that, go near-square
-  const want = n <= 3 ? n : Math.ceil(Math.sqrt(n));
+  // 80px per column is the floor that still lets a 1024 laptop hold the full
+  // 12-wide sheet; phones fit 3-4 columns and scroll.
+  const fits = Math.max(1, Math.floor((Math.min(innerWidth, 1300) - 44) / 80));
+  const want = n <= 3 ? n
+    : n <= 25 ? Math.ceil(Math.sqrt(n))
+    : n <= 49 ? 7
+    : n <= 81 ? 9
+    : 12;
   const cols = Math.max(1, Math.min(want, fits));
   const grid = el('grid');
   grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
