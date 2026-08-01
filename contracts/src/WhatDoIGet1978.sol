@@ -111,11 +111,15 @@ contract WhatDoIGet1978 is ERC721, ERC2981, Ownable {
     /// @dev Draw one artwork from those still unassigned.
     ///
     ///      The seed mixes prevrandao with the minter and the token id. Be clear
-    ///      about what that is worth: a block proposer can influence prevrandao
-    ///      and could re-roll a mint in the same block. For an art edition that
-    ///      is an acceptable trade against the cost and delay of a VRF - but it
-    ///      is NOT a guarantee against a determined, well-resourced proposer,
-    ///      and it should not be described as one.
+    ///      about what that is worth: every input is public at call time, so the
+    ///      draw is only blind to callers that cannot act on it. An EOA cannot;
+    ///      a minting contract can compute its pick and revert in
+    ///      onERC721Received when it dislikes the result, retrying next block at
+    ///      gas cost, and a block proposer can additionally influence prevrandao
+    ///      itself. This is an accepted trade for an art edition of same-price
+    ///      variants, made against the cost and delay of a VRF or commit-reveal -
+    ///      but it is NOT unpredictability against a motivated contract minter,
+    ///      and it should not be described as such.
     function _draw(address to, uint256 id) private returns (uint256) {
         uint256 n = _remaining;
         uint256 i = uint256(keccak256(abi.encodePacked(block.prevrandao, to, id, n))) % n;

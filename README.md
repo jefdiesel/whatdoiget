@@ -164,7 +164,11 @@ Before mainnet:
   addresses and `test_JsProofsVerifyOnChain` mints for every one of them
 - ~~Etherscan verification~~ — configured in `foundry.toml`; needs
   `ETHERSCAN_API_KEY` exported at deploy time
-- a second pair of eyes on the contract while it is still changeable
+- ~~a second pair of eyes on the contract while it is still changeable~~ — an
+  adversarial review found one substantive item: a contract minter can
+  precompute the draw and revert-and-retry until it likes the result.
+  **Accepted** for this edition (same-price variants, no ETH at risk); the
+  `_draw` NatSpec discloses it plainly. Everything else came back clean.
 
 Launch sequence, in order:
 
