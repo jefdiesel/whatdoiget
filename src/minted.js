@@ -31,6 +31,8 @@ const TOTAL_MINTED = '0xa2309ff8'; // totalMinted()
 
 // keccak256("Minted(address,uint256,uint256)")
 const MINTED_TOPIC = '0x25b428dfde728ccfaddad7e29e4ac23c24ed7fd1a6e3e3f91894a9a073f5dfff';
+// keccak256("Transfer(address,address,uint256)") - the ERC-721 standard event
+const TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 
 const EDITION = enumerateEdition('UP36348', { posterFirst: POSTER_STATES });
 const { ranked } = buildEdition();
@@ -92,19 +94,17 @@ async function load() {
   try {
     const who = await slugAddress();
 
-    // How many logs there OUGHT to be - only knowable for the unfiltered
-    // view. Best-effort: if every call provider is down too, 0 accepts the
-    // first log answer, which is no worse than before.
-    const total = who ? 0
-      : await rpcAny(CALL_RPCS, 'eth_call', [{ to: CONTRACT, data: TOTAL_MINTED }, 'latest'])
-        .then((r) => Number(BigInt(r === '0x' ? '0x0' : r)))
-        .catch(() => 0);
+    // How many logs there OUGHT to be. Best-effort: if every call provider is
+    // down too, 0 accepts the first log answer, which is no worse than before.
+    const total = await rpcAny(CALL_RPCS, 'eth_call', [{ to: CONTRACT, data: TOTAL_MINTED }, 'latest'])
+      .then((r) => Number(BigInt(r === '0x' ? '0x0' : r)))
+      .catch(() => 0);
 
+    // The full Minted set is needed either way: it is the page when there is
+    // no slug, and it is the only place a tokenId's artwork is written.
     const params = [{
       address: CONTRACT,
-      topics: who
-        ? [MINTED_TOPIC, `0x${who.slice(2).padStart(64, '0')}`]
-        : [MINTED_TOPIC],
+      topics: [MINTED_TOPIC],
       fromBlock: FROM_BLOCK,
       toBlock: 'latest',
     }];
@@ -120,18 +120,52 @@ async function load() {
     }
     if (logs === null) throw lastErr ?? new Error('no provider answered');
 
-    minted = logs.map((l) => ({
+    const all = logs.map((l) => ({
       tokenId: Number(BigInt(l.topics[2])),
       artwork: Number(BigInt(l.data)),
       owner: `0x${l.topics[1].slice(26)}`,
       tx: l.transactionHash,
     })).sort((a, b) => a.tokenId - b.tokenId);
+
+    minted = who ? await heldBy(who, all) : all;
   } catch (err) {
     el('count').textContent = '';
     el('grid').innerHTML = `<p class="note">Could not read the chain: ${err.message}</p>`;
     return;
   }
   render();
+}
+
+/// What the wallet holds NOW, not what it minted: ERC-721 Transfer events in
+/// and out of the address (both indexed, so the node filters), replayed in
+/// order - a token belongs to the wallet iff its latest transfer points there.
+/// Mints count too: _mint emits Transfer(0x0 -> minter).
+async function heldBy(who, all) {
+  const pad = `0x${who.slice(2).padStart(64, '0')}`;
+  const range = { address: CONTRACT, fromBlock: FROM_BLOCK, toBlock: 'latest' };
+  const [ins, outs] = await Promise.all([
+    rpcAny(LOG_RPCS, 'eth_getLogs', [{ ...range, topics: [TRANSFER_TOPIC, null, pad] }]),
+    rpcAny(LOG_RPCS, 'eth_getLogs', [{ ...range, topics: [TRANSFER_TOPIC, pad, null] }]),
+  ]);
+
+  // Merge, dedupe (a self-transfer appears in both), replay in chain order.
+  const events = [...new Map([...ins, ...outs].map((l) => [`${l.blockNumber}:${l.logIndex}`, l])).values()]
+    .sort((a, b) => {
+      const d = (BigInt(a.blockNumber) - BigInt(b.blockNumber))
+        || (BigInt(a.logIndex) - BigInt(b.logIndex));
+      return d > 0n ? 1 : d < 0n ? -1 : 0;
+    });
+
+  const last = new Map();   // tokenId -> { to, tx } after the latest event seen
+  for (const l of events) {
+    last.set(Number(BigInt(l.topics[3])), { to: `0x${l.topics[2].slice(26)}`, tx: l.transactionHash });
+  }
+
+  const artworkOf = new Map(all.map((m) => [m.tokenId, m.artwork]));
+  return [...last.entries()]
+    .filter(([, v]) => v.to === who)
+    .map(([tokenId, v]) => ({ tokenId, artwork: artworkOf.get(tokenId), owner: who, tx: v.tx }))
+    .sort((a, b) => a.tokenId - b.tokenId);
 }
 
 /// Lay the minted items out as a near-square block that steps toward the
@@ -160,8 +194,8 @@ function render(shuffle = false) {
   const list = shuffle ? shuffled(minted) : minted;
   el('count').textContent = SLUG
     ? (minted.length
-      ? `${minted.length} minted by ${SLUG.length > 14 ? short(SLUG) : SLUG}`
-      : `Nothing minted by ${SLUG.length > 14 ? short(SLUG) : SLUG} yet.`)
+      ? `${minted.length} held by ${SLUG.length > 14 ? short(SLUG) : SLUG}`
+      : `Nothing held by ${SLUG.length > 14 ? short(SLUG) : SLUG}.`)
     : (minted.length ? `${minted.length} minted of 180` : 'Nothing minted yet.');
   layout(list.length);
 
