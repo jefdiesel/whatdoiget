@@ -7,6 +7,7 @@
 
 import { available, connect, short } from './wallet.js';
 import { INK, PAPER, SPOT, CUT_TOP, CUT_BOTTOM } from './master.js';
+import { resolveEns, looksLikeEns } from './ens.js';
 
 const el = (id) => document.getElementById(id);
 let account = null;
@@ -80,18 +81,37 @@ function verdictArt(on) {
 
 async function check() {
   el('error').textContent = '';
-  const addr = el('address').value.trim();
-  if (!addr) return showError(new Error('Connect a wallet or paste an address first.'));
-  if (!isAddress(addr)) return showError(new Error('That is not an Ethereum address — expected 0x followed by 40 hex characters.'));
+  const input = el('address').value.trim();
+  if (!input) return showError(new Error('Connect a wallet, or paste an address or ENS name first.'));
 
   const box = el('result');
+  let addr = input;
+  let label = () => short(addr);
+
+  if (looksLikeEns(input)) {
+    box.innerHTML = '<p class="note">Resolving name…</p>';
+    try {
+      addr = await resolveEns(input);
+    } catch {
+      box.innerHTML = '';
+      return showError(new Error('Could not reach ENS. Paste the 0x address instead.'));
+    }
+    if (!addr) {
+      box.innerHTML = '';
+      return showError(new Error(`${input} does not resolve to an address.`));
+    }
+    label = () => `${input.toLowerCase()} (${short(addr)})`;
+  } else if (!isAddress(input)) {
+    return showError(new Error('That is not an Ethereum address or ENS name — expected 0x followed by 40 hex characters, or name.eth.'));
+  }
+
   box.innerHTML = '<p class="note">Checking…</p>';
   try {
     const list = await loadAllowlist();
     const onList = Boolean(list?.proofs?.[addr.toLowerCase()]);
     box.innerHTML = verdictArt(onList) + (onList
-      ? `<p class="note">${short(addr)} can mint <b>1 free</b> when the allowlist phase opens.</p>`
-      : `<p class="note">${short(addr)} has no free mint. The list is still being added to
+      ? `<p class="note">${label()} can mint <b>1 free</b> when the allowlist phase opens.</p>`
+      : `<p class="note">${label()} has no free mint. The list is still being added to
          before the drop — check again later, or come back for the public mint.</p>`);
   } catch (err) {
     box.innerHTML = '';
