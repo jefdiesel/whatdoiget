@@ -179,7 +179,9 @@ function layout(n) {
   // 80px per column is the floor that still lets a 1024 laptop hold the full
   // 12-wide sheet; phones fit 3-4 columns and scroll.
   const fits = Math.max(1, Math.floor((Math.min(innerWidth, 1300) - 44) / 80));
-  const want = n <= 3 ? n
+  // The collective view lets 2-3 items sit in one row; a wallet's own page
+  // squares up immediately - 3 held reads as a 2x2 with a gap, not a strip.
+  const want = (n <= 3 && !SLUG) ? n
     : n <= 25 ? Math.ceil(Math.sqrt(n))
     : n <= 49 ? 7
     : n <= 81 ? 9
