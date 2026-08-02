@@ -150,8 +150,7 @@ function renderStatus() {
   const box = el('status');
 
   if (!CONTRACT) {
-    box.innerHTML = '<p class="note">The mint has not opened. The allowlist goes first — '
-      + '<a href="./checker.html">check your wallet</a> for a free mint. '
+    box.innerHTML = '<p class="note">The mint has not opened. '
       + 'The contract address will appear here when the drop is live.</p>';
     return;
   }
