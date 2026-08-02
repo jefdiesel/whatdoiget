@@ -1,5 +1,5 @@
 // ENS resolution with no dependencies: keccak-256, namehash, and two eth_calls
-// against the mainnet registry. It exists so the checker can take "name.eth"
+// against the mainnet registry. It exists so /minted/<slug> can take "name.eth"
 // instead of demanding the raw address.
 //
 // keccak is implemented here because the browser has no native keccak-256
