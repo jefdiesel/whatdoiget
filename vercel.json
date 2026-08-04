@@ -7,6 +7,9 @@
   "rewrites": [
     { "source": "/minted/:address", "destination": "/minted" }
   ],
+  "redirects": [
+    { "source": "/mint", "destination": "/minted", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/src/(.*)",
