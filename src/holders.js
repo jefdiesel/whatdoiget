@@ -81,5 +81,4 @@ async function load() {
   }
 }
 
-el('reload').onclick = load;
 load();

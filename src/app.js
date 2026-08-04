@@ -1,26 +1,29 @@
-// One view of the collection. The grid comes from the page, so the same script
-// drives both:
+// The poster: the whole edition as one sheet, read from the chain. The grid
+// column count comes from the page, so the same script drives both:
 //
-//   index.html   7 x 9   = 63  - the poster's own grid, a draw from the 180
-//   all.html     12 x 15 = 180 - the whole collection at once
+//   index.html   the edition in artwork order - the sheet reassembled
+//   all.html     the edition redistributed - shuffled, the way it was made
 //
-// 12:15 is 0.800 against 7:9's 0.778, a 2.9% difference. Nothing else factors
-// 180 anywhere near that ratio: 10x18 is 0.556, 9x20 is 0.450.
-//
-// Redistribute reshuffles the draw, which is how the original was made: one
-// cut, stamped, pasted down at random.
+// Every tile is a real minted token. Clicking one opens the same detail panel
+// the minted page uses: traits, rarity, and the on-chain owner, transaction,
+// and marketplace. Redistribute reshuffles the sheet, which is how the original
+// was made: one cut, stamped, pasted down at random.
 
-import { enumerateEdition, renderItem, traitsOf } from './item.js';
-import { POSTER_STATES } from './provenance.js';
-import { fitBanner } from './fitbar.js';
-import { ABOUT_HTML } from './about.js';
+import {
+  EDITION, chainConfig, loadMinted, detailHTML, renderItem, artworkOf, isProvenanced,
+} from './collection.js';
 
 const poster = document.getElementById('poster');
-const COLS = Number(poster.dataset.cols);
-const ROWS = Number(poster.dataset.rows);
-
-const items = enumerateEdition('UP36348', { posterFirst: POSTER_STATES });
+const COLS = Number(poster.dataset.cols) || 12;
+const SHUFFLE_FIRST = poster.dataset.shuffle === 'true';
+const cfg = chainConfig();
 const overlay = document.getElementById('overlay');
+const count = document.getElementById('count');
+const setStatus = (t) => { if (count) count.textContent = t; };
+
+let tokens = [];   // every minted token: { tokenId, artwork, owner, tx }
+let order = [];     // the tokens in current display order
+let current = null;
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -31,22 +34,24 @@ function shuffle(arr) {
   return a;
 }
 
-const POSTER_KEYS = new Set(
-  POSTER_STATES.map((p) => `${p.rot}|${p.mirror}|${p.word}|${p.plane}|${p.plate}`));
-
-let current = null;
-
-function open(item) {
-  current = item;
-  document.getElementById('art').innerHTML = renderItem(item);
-  document.getElementById('title').textContent = 'What Do I Get, 1978';
-  const rows = Object.entries({ Item: `#${item.id}`, ...traitsOf(item) }).map(
-    ([k, v]) => `<div class="row"><dt>${k}</dt><dd>${v}</dd></div>`);
-  if (POSTER_KEYS.has(`${item.rot}|${item.mirror}|${item.word}|${item.plane}|${item.plate}`)) {
-    rows.push('<div class="row"><dt>Provenance</dt>' +
-      '<dd class="prov">Malcolm Garrett 1978</dd></div>');
+function paint() {
+  poster.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+  poster.innerHTML = '';
+  for (const token of order) {
+    const fig = document.createElement('figure');
+    if (isProvenanced(token)) fig.classList.add('prov');
+    fig.innerHTML = renderItem(artworkOf(token));
+    fig.title = `#${token.tokenId}`;
+    fig.onclick = () => open(token);
+    poster.append(fig);
   }
-  document.getElementById('traits').innerHTML = rows.join('');
+}
+
+function open(token) {
+  current = token;
+  document.getElementById('art').innerHTML = renderItem(artworkOf(token));
+  document.getElementById('title').textContent = 'What Do I Get, 1978';
+  document.getElementById('traits').innerHTML = detailHTML(token, cfg);
   overlay.classList.add('on');
 }
 
@@ -56,11 +61,12 @@ overlay.addEventListener('click', (e) => {
 });
 document.getElementById('close').onclick = close;
 
-// Step through the whole edition in numerical order, not just what is on screen.
+// Step through the sheet in its current order, wrapping at either end.
 const step = (d) => {
   if (!current) return;
-  const i = items.findIndex((x) => x.id === current.id);
-  open(items[(i + d + items.length) % items.length]);
+  const i = order.findIndex((t) => t.tokenId === current.tokenId);
+  if (i < 0) return;
+  open(order[(i + d + order.length) % order.length]);
 };
 document.getElementById('next').onclick = () => step(1);
 document.getElementById('prev').onclick = () => step(-1);
@@ -73,29 +79,32 @@ addEventListener('keydown', (e) => {
 });
 
 function redistribute() {
-  poster.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
-  poster.style.aspectRatio = `${COLS} / ${ROWS}`;
-  const drawn = shuffle(items).slice(0, COLS * ROWS);
-  poster.innerHTML = '';
-  for (const item of drawn) {
-    const fig = document.createElement('figure');
-    fig.innerHTML = renderItem(item);
-    fig.title = `#${item.id} ${item.word ?? 'BLANK'}`;
-    fig.onclick = () => open(item);
-    poster.append(fig);
-  }
-  fitBanner();
+  order = shuffle(tokens);
+  paint();
+}
+document.getElementById('redistribute').onclick = redistribute;
+
+// Default order: index reassembles the sheet by artwork; all comes redistributed.
+function initialOrder() {
+  return SHUFFLE_FIRST
+    ? shuffle(tokens)
+    : tokens.slice().sort((a, b) => a.artwork - b.artwork);
 }
 
-// About is an overlay, not a page you navigate away from
-const about = document.getElementById('about');
-document.getElementById('about-body').innerHTML = ABOUT_HTML;
-const closeAbout = () => { about.classList.remove('on'); history.replaceState(null, '', location.pathname); };
-document.getElementById('about-open').onclick = (e) => { e.preventDefault(); about.classList.add('on'); };
-document.getElementById('about-close').onclick = closeAbout;
-about.addEventListener('click', (e) => { if (e.target === about) closeAbout(); });
-addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAbout(); });
-if (location.hash === '#about') about.classList.add('on');
+async function boot() {
+  setStatus('reading the chain…');
+  poster.innerHTML = '';
+  try {
+    tokens = await loadMinted(cfg);
+  } catch (err) {
+    const msg = `Could not read the chain: ${err.message}`;
+    setStatus(msg);
+    if (!count) poster.innerHTML = `<p class="note" style="grid-column:1/-1">${msg}</p>`;
+    return;
+  }
+  setStatus(`${tokens.length} of ${EDITION.length}`);
+  order = initialOrder();
+  paint();
+}
 
-document.getElementById('redistribute').onclick = redistribute;
-redistribute();
+boot();

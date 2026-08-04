@@ -9,25 +9,11 @@
 <base href="/">
 <link rel="stylesheet" href="./style.css">
 <style>
-  main { max-width: 1300px; margin: 0 auto; padding: 24px 22px 90px; }
-  .bar { justify-content: center; }
-  .bar { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
-  .bar h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif;
-            font-size: 26px; margin: 0; transform: skewX(-9deg); }
-  #count { opacity: .55; }
-  #wallets { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 14px; }
-  .wallet { display: flex; align-items: center; gap: 8px; background: none;
-            color: var(--ink); border: 2px solid var(--ink); }
-  .wallet:hover { background: var(--ink); color: var(--paper); }
+  main { max-width: 1300px; margin: 0 auto; padding: 24px 22px 48px; }
   /* seamless, borderless, centred - the block sizes itself in layout() */
   #grid { display: grid; gap: 0; margin: 0 auto; }
   #grid figure { margin: 0; cursor: pointer; position: relative; line-height: 0; }
   #grid figure:hover svg { outline: 3px solid var(--spot); outline-offset: -3px; }
-  .tag { position: absolute; left: 5px; bottom: 4px; font-size: 9px; line-height: 1;
-         letter-spacing: .06em; opacity: 0; transition: opacity .1s;
-         background: var(--ink); color: var(--paper); padding: 2px 4px; }
-  .tag.prov { background: var(--spot); }
-  #grid figure:hover .tag { opacity: 1; }
   #grid svg { width: 100%; height: auto; display: block; }
   #overlay { position: fixed; inset: 0; background: rgba(236,228,212,.97); z-index: 20;
              display: none; overflow-y: auto; }
@@ -49,29 +35,30 @@
   #detail-close { margin-top: 16px; }
   .note { text-transform: none; letter-spacing: 0; font-family: Helvetica, Arial, sans-serif;
           font-size: 13px; opacity: .7; }
-  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
-           border-top: 3px solid var(--ink); display: flex; align-items: center; gap: .3em;
-           padding: 7px 16px; font-size: 19px; line-height: 1;
-           font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif; text-transform: uppercase; }
-  footer > * { transform: skewX(-9deg); }
-  footer .mark { font-weight: 700; }
-  footer a { color: var(--ink); text-decoration: none; }
-  footer a:hover { color: var(--spot); }
-  footer .dot { opacity: .5; }
 </style>
 </head>
 <body data-contract="0xbf7370c81acf8768953511564246d0afe80c19b5"
       data-network="mainnet" data-from-block="0x1879052">
 
-<main>
-  <div class="bar">
-    <h2>Minted</h2>
-    <span id="count"></span>
-    <button id="shuffle" class="ghost">Redistribute</button>
-    <button id="reload" class="ghost">Reload</button>
-    <button id="mine" class="ghost">Mine</button>
-  </div>
+<header class="nav">
+  <a class="mark" href="./index.html">What Do I Get, 1978</a>
+  <span class="dot">·</span>
+  <a href="./traits.html">Traits</a>
+  <span class="dot">·</span>
+  <a href="./minted.html">Minted</a>
+  <span class="dot">·</span>
+  <a href="./holders.html">Holders</a>
+  <span class="dot">·</span>
+  <a href="./about.html">About</a>
+  <span class="dot">·</span>
+  <a href="https://opensea.io/collection/what-do-i-get-1978" target="_blank" rel="noopener">OpenSea ↗</a>
+  <a id="mine-link" hidden>Mine</a>
+  <button id="mine"><span>Connect Wallet</span></button>
+  <button id="redistribute"><span>Redistribute</span></button>
   <div id="wallets"></div>
+</header>
+
+<main>
   <div id="grid"></div>
 </main>
 
@@ -86,22 +73,7 @@
   </div>
 </div>
 
-<footer>
-  <span class="mark">What Do I Get, 1978</span>
-  <span class="dot">·</span>
-  <a href="./index.html">7:9</a>
-  <span class="dot">·</span>
-  <a href="./all.html">12:15</a>
-  <span class="dot">·</span>
-  <a href="./traits.html">Traits</a>
-  <span class="dot">·</span>
-  <a href="./minted.html">Minted</a>
-  <span class="dot">·</span>
-  <a href="./holders.html">Holders</a>
-  <span class="dot">·</span>
-  <a href="https://opensea.io/collection/what-do-i-get-1978" target="_blank" rel="noopener">OpenSea ↗</a>
-</footer>
-
+<script type="module" src="./src/nav.js"></script>
 <script type="module" src="./src/minted.js"></script>
 </body>
 </html>

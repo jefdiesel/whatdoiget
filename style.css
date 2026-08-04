@@ -6,40 +6,15 @@ body {
   letter-spacing: .06em; text-transform: uppercase;
 }
 
-/* The banner is part of the SHEET, not the page: it is exactly as wide as the
-   grid and sits directly under the last row of tiles, the way it does on the
-   1978 poster. It scrolls with the artwork - it is not pinned to the viewport.
-   One dense line of condensed oblique caps, single middots, edge to edge. */
+/* The sheet is the poster: the grid of tiles, sized by the page. A control bar
+   rides above it (count + Redistribute); the navigation lives in the shared
+   footer at the foot of the page, the same on every page. */
 .sheet { display: flex; flex-direction: column; }
 .sheet #poster { width: 100%; }
 
-.banner {
-  background: var(--paper);
-  display: flex; align-items: center; gap: .24em; padding: 7px 0 9px;
-  font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-  font-size: 26px;   /* replaced at runtime by src/fitbar.js */
-  line-height: 1; text-transform: uppercase; letter-spacing: .01em;
-}
-.banner > * { white-space: nowrap; }
-/* skew the letterforms, never the red box */
-.banner .mark, .banner a, .banner .dot, #redistribute span {
-  display: inline-block; transform: skewX(-9deg);
-}
-.banner .mark { font-weight: 700; }
-/* the red block ends the line, flush to the right edge of the sheet */
-#redistribute { margin-right: 0; }
-.banner a { color: var(--ink); text-decoration: none; }
-.banner a:hover { color: var(--spot); }
-.banner .dot { opacity: .5; }
+.posterbar { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; }
+.posterbar #count { opacity: .55; }
 
-#redistribute {
-  font: inherit; text-transform: inherit; letter-spacing: inherit;
-  background: var(--spot); color: #fff; border: 0; cursor: pointer;
-  padding: .12em .26em .16em; line-height: 1;
-}
-#redistribute:hover { background: var(--ink); }
-
-.grow { flex: 1; }
 .grow { flex: 1; }
 
 button, a.btn {
@@ -111,26 +86,61 @@ figcaption { opacity: .55; align-self: flex-start; }
 #meta dd.prov { color: var(--spot); }
 #nav { display: flex; gap: 8px; margin-top: 16px; }
 
-/* --- mint call to action ------------------------------------------ */
-/* The banner cannot carry this: fitbar.js scales that line to the exact width
-   of the sheet, so every item added shrinks the type for all the others. This
-   sits outside the sheet instead, in the corner the poster leaves empty.
-   z-index 10 keeps it UNDER the item overlay (20) and the about panel (30), so
-   it never floats over a dialogue. */
-.mint-cta {
-  position: fixed; top: 18px; right: 22px; z-index: 10;
+/* --- shared header: the same navigation bar at the top of every page, stuck to
+   the top on scroll. The mark links home; Redistribute (home, 12:15, and minted
+   only) is the red block that ends the line, flush right, its letters skewed but
+   not the box, as on the 1978 poster. z-index 15 keeps it UNDER the item
+   overlay (20). --- */
+header.nav {
+  position: sticky; top: 0; z-index: 15; flex-wrap: wrap;
+  background: var(--paper); border-bottom: 3px solid var(--ink);
+  display: flex; align-items: center; gap: .3em; padding: 8px 16px;
+  font-size: 19px; line-height: 1; text-transform: uppercase;
   font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-  font-size: 22px; line-height: 1; text-transform: uppercase; letter-spacing: .04em;
-  background: var(--spot); color: #fff; text-decoration: none;
-  padding: 6px 14px 8px; border: 0; cursor: pointer;
 }
-.mint-cta span { display: inline-block; transform: skewX(-9deg); }
-.mint-cta:hover { background: var(--ink); color: var(--paper); }
-@media (max-width: 640px) {
-  .mint-cta { top: 10px; right: 12px; font-size: 17px; padding: 5px 10px 6px; }
+header.nav > * { transform: skewX(-9deg); }
+header.nav .mark { font-weight: 700; }
+header.nav a { color: var(--ink); text-decoration: none; }
+header.nav a:hover { color: var(--spot); }
+header.nav .dot { opacity: .5; }
+header.nav #mine, header.nav #redistribute {
+  transform: none; cursor: pointer; font: inherit; line-height: 1;
+  text-transform: uppercase; letter-spacing: .04em;
 }
+header.nav #mine span, header.nav #redistribute span { display: inline-block; transform: skewX(-9deg); }
+/* Mine opens the wallet connect; it starts the right-hand group, so it carries
+   the auto margin and Redistribute (where present) follows it. */
+header.nav #mine {
+  margin-left: auto; background: none; color: var(--ink);
+  border: 2px solid var(--ink); padding: .1em .5em .18em;
+}
+header.nav #mine:hover { background: var(--ink); color: var(--paper); }
+/* "Mine" links back to your holdings; it shows only while connected and, when
+   present, becomes the start of the right-hand group so Connect/Disconnect drops
+   its own auto margin. */
+header.nav #mine-link:not([hidden]) { margin-left: auto; }
+header.nav #mine-link:not([hidden]) ~ #mine { margin-left: 0; }
+header.nav #redistribute {
+  border: 0; background: var(--spot); color: #fff; padding: .14em .5em .2em;
+}
+header.nav #redistribute:hover { background: var(--ink); }
+/* the wallet chooser drops out of the header, below the Mine button */
+header.nav #wallets {
+  position: absolute; top: 100%; right: 12px; margin-top: 4px; transform: none;
+  display: none; flex-direction: column; gap: 6px; padding: 8px; z-index: 16;
+  background: var(--paper); border: 2px solid var(--ink);
+  text-transform: none; letter-spacing: 0;
+}
+header.nav #wallets.on { display: flex; }
+.wallet {
+  display: flex; align-items: center; gap: 8px; cursor: pointer; font: inherit;
+  background: none; color: var(--ink); border: 2px solid var(--ink); padding: 6px 10px;
+}
+.wallet:hover { background: var(--ink); color: var(--paper); }
+.note { text-transform: none; letter-spacing: 0; font-family: Helvetica, Arial, sans-serif;
+        font-size: 13px; opacity: .7; }
 
-/* --- about overlay ------------------------------------------------ */
+/* --- about page prose --------------------------------------------- */
 .prose {
     text-transform: none; letter-spacing: 0; font-size: 15px; line-height: 1.62;
     max-width: 62ch; margin: 0 auto; font-family: Helvetica, Arial, sans-serif;
@@ -172,18 +182,3 @@ figcaption { opacity: .55; align-self: flex-start; }
   .prose hr { border: 0; border-top: 3px solid var(--ink); margin: 44px 0; }
   .prose .note { font-size: 13px; opacity: .72; }
   .listen { margin: 22px 0 8px; }
-
-#about {
-  position: fixed; inset: 0; z-index: 30; display: none;
-  background: rgba(236,228,212,.98); overflow-y: auto; padding: 46px 22px 60px;
-}
-#about.on { display: block; }
-#about-close {
-  position: fixed; top: 18px; right: 22px; z-index: 31;
-  font-family: Haettenschweiler, 'Arial Narrow', Impact, sans-serif;
-  font-size: 22px; text-transform: uppercase; letter-spacing: .04em;
-  background: var(--ink); color: var(--paper); border: 0; cursor: pointer;
-  padding: 6px 14px 8px;
-}
-#about-close span { display: inline-block; transform: skewX(-9deg); }
-#about-close:hover { background: var(--spot); }

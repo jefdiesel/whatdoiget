@@ -8,7 +8,7 @@
 <style>
   /* style.css centres main as a flex column, which shrink-wraps every child.
      This page is a document, not a gallery, so lay it out as one. */
-  main.holders { display: block; max-width: 62ch; margin: 0 auto; padding: 34px 22px 120px; }
+  main.holders { display: block; max-width: 62ch; margin: 0 auto; padding: 34px 22px 48px; }
   .bar { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
   .bar h2 { font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif;
             font-size: 30px; margin: 0; transform: skewX(-9deg); }
@@ -26,44 +26,38 @@
   .row dd { margin: 0; font-weight: bold; }
   .note { text-transform: none; letter-spacing: 0; font-family: Helvetica, Arial, sans-serif;
           font-size: 13px; opacity: .7; }
-  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper);
-           border-top: 3px solid var(--ink); display: flex; align-items: center; gap: .3em;
-           padding: 7px 16px; font-size: 19px; line-height: 1;
-           font-family: Haettenschweiler,'Arial Narrow',Impact,sans-serif; text-transform: uppercase; }
-  footer > * { transform: skewX(-9deg); }
-  footer .mark { font-weight: 700; }
-  footer a { color: var(--ink); text-decoration: none; }
-  footer a:hover { color: var(--spot); }
-  footer .dot { opacity: .5; }
 </style>
 </head>
 <body data-contract="0xbf7370c81acf8768953511564246d0afe80c19b5"
       data-network="mainnet" data-from-block="0x1879052">
 
-<main class="holders">
-  <div class="bar">
-    <h2>Holders</h2>
-    <span id="count"></span>
-    <button id="reload" class="ghost">Reload</button>
-  </div>
-  <dl id="list"></dl>
-  <p class="note" style="margin-top:14px">Each wallet links to its own page of held items.</p>
-</main>
-
-<footer>
-  <span class="mark">What Do I Get, 1978</span>
-  <span class="dot">·</span>
-  <a href="./index.html">7:9</a>
-  <span class="dot">·</span>
-  <a href="./all.html">12:15</a>
+<header class="nav">
+  <a class="mark" href="./index.html">What Do I Get, 1978</a>
   <span class="dot">·</span>
   <a href="./traits.html">Traits</a>
   <span class="dot">·</span>
   <a href="./minted.html">Minted</a>
   <span class="dot">·</span>
+  <a href="./holders.html">Holders</a>
+  <span class="dot">·</span>
+  <a href="./about.html">About</a>
+  <span class="dot">·</span>
   <a href="https://opensea.io/collection/what-do-i-get-1978" target="_blank" rel="noopener">OpenSea ↗</a>
-</footer>
+  <a id="mine-link" hidden>Mine</a>
+  <button id="mine"><span>Connect Wallet</span></button>
+  <div id="wallets"></div>
+</header>
 
+<main class="holders">
+  <div class="bar">
+    <h2>Holders</h2>
+    <span id="count"></span>
+  </div>
+  <dl id="list"></dl>
+  <p class="note" style="margin-top:14px">Each wallet links to its own page of held items.</p>
+</main>
+
+<script type="module" src="./src/nav.js"></script>
 <script type="module" src="./src/holders.js"></script>
 </body>
 </html>

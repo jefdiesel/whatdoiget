@@ -5,26 +5,34 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>What Do I Get, 1978 — 12 x 15</title>
 <link rel="stylesheet" href="./style.css">
-<style>.sheet { width: min(94vw, calc((100vh - 150px) * 12 / 15)); }</style>
+<style>
+  .sheet { width: min(calc(100vw - 44px), 1300px); }
+</style>
 </head>
-<body>
+<body data-contract="0xbf7370c81acf8768953511564246d0afe80c19b5"
+      data-network="mainnet" data-from-block="0x1879052">
+
+<header class="nav">
+  <a class="mark" href="./index.html">What Do I Get, 1978</a>
+  <span class="dot">·</span>
+  <a href="./traits.html">Traits</a>
+  <span class="dot">·</span>
+  <a href="./minted.html">Minted</a>
+  <span class="dot">·</span>
+  <a href="./holders.html">Holders</a>
+  <span class="dot">·</span>
+  <a href="./about.html">About</a>
+  <span class="dot">·</span>
+  <a href="https://opensea.io/collection/what-do-i-get-1978" target="_blank" rel="noopener">OpenSea ↗</a>
+  <a id="mine-link" hidden>Mine</a>
+  <button id="mine"><span>Connect Wallet</span></button>
+  <button id="redistribute"><span>Redistribute</span></button>
+  <div id="wallets"></div>
+</header>
 
 <main>
   <div class="sheet">
-    <div id="poster" data-cols="12" data-rows="15"></div>
-    <div class="banner">
-      <span class="mark">What Do I Get, 1978</span>
-      <span class="dot">·</span>
-      <a href="./index.html">7:9</a>
-      <span class="dot">·</span>
-      <a href="./traits.html">Traits</a>
-      <span class="dot">·</span>
-      <a href="./minted.html">Minted</a>
-      <span class="dot">·</span>
-      <a href="#about" id="about-open">About</a>
-      <span class="dot">·</span>
-      <button id="redistribute"><span>Redistribute</span></button>
-    </div>
+    <div id="poster" data-cols="12" data-shuffle="true"></div>
   </div>
 </main>
 
@@ -43,11 +51,7 @@
   </div>
 </div>
 
-<div id="about">
-  <button id="about-close"><span>Close</span></button>
-  <div class="prose" id="about-body"></div>
-</div>
-
+<script type="module" src="./src/nav.js"></script>
 <script type="module" src="./src/app.js"></script>
 </body>
 </html>
